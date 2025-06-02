@@ -84,7 +84,11 @@ export default function Dashboard() {
       isActive: true,
       membershipType: 'delegate',
       memberState: 'California',
-      isNewsletterSubscribed: true
+      isNewsletterSubscribed: true,
+      role: 'Senior Delegate',
+      emails: ['sarah.johnson@email.com'],
+      phones: ['+1 (555) 123-4567'],
+      notes: 'Excellent communication skills'
     },
     {
       id: '2',
@@ -94,7 +98,9 @@ export default function Dashboard() {
       startDate: '2024-11-10',
       isActive: true,
       membershipType: 'member_state',
-      isNewsletterSubscribed: false
+      isNewsletterSubscribed: false,
+      emails: ['contact@globalcorp.com'],
+      phones: ['+1 (555) 987-6543']
     },
     {
       id: '3',
@@ -105,7 +111,11 @@ export default function Dashboard() {
       isActive: true,
       membershipType: 'delegate',
       memberState: 'New York',
-      isNewsletterSubscribed: true
+      isNewsletterSubscribed: true,
+      role: 'Policy Advisor',
+      emails: ['emma.wilson@gov.ny.us', 'e.wilson@personal.com'],
+      phones: ['+1 (555) 456-7890'],
+      notes: 'Specializes in environmental policy'
     },
     {
       id: '4',
@@ -115,7 +125,9 @@ export default function Dashboard() {
       startDate: '2024-11-01',
       isActive: true,
       membershipType: 'member_state',
-      isNewsletterSubscribed: true
+      isNewsletterSubscribed: true,
+      emails: ['info@innovationlabs.com'],
+      phones: ['+1 (555) 234-5678', '+1 (555) 234-5679']
     },
     {
       id: '5',
@@ -126,7 +138,10 @@ export default function Dashboard() {
       isActive: true,
       membershipType: 'delegate',
       memberState: 'Texas',
-      isNewsletterSubscribed: false
+      isNewsletterSubscribed: false,
+      role: 'Trade Representative',
+      emails: ['john.smith@texas.gov'],
+      phones: ['+1 (555) 345-6789']
     },
     {
       id: '6',
@@ -136,7 +151,9 @@ export default function Dashboard() {
       startDate: '2024-10-25',
       isActive: true,
       membershipType: 'member_state',
-      isNewsletterSubscribed: true
+      isNewsletterSubscribed: true,
+      emails: ['contact@futuresystems.com', 'support@futuresystems.com'],
+      phones: ['+1 (555) 567-8901']
     }
   ]
 
