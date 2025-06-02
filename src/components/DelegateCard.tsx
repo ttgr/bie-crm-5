@@ -76,7 +76,7 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
 
   return (
     <>
-      <Card className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
+      <Card className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1 flex flex-col h-full">
         <CardHeader className="pb-3">
           <div className="flex items-start gap-3">
             <Avatar className="h-10 w-10">
@@ -126,7 +126,7 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
             )}
           </div>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-3 flex-1 flex flex-col">
           {/* Member State and Role */}
           {delegate.memberState && (
             <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -200,8 +200,8 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
             </Button>
           )}
 
-          {/* Action Buttons */}
-          <div className="flex gap-2 pt-2">
+          {/* Action Buttons - push to bottom */}
+          <div className="flex gap-2 pt-2 mt-auto">
             <Button variant="default" size="sm" onClick={handleViewContact} className="flex-1">
               View Contact
             </Button>

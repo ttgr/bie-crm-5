@@ -1,3 +1,4 @@
+
 import { useState } from "react"
 import { DelegateCard } from "@/components/DelegateCard"
 import { Button } from "@/components/ui/button"
@@ -179,10 +180,10 @@ export default function Delegates() {
         handlePageSizeChange={handlePageSizeChange}
       />
 
-      {/* Results Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Results Grid with equal height cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
         {currentDelegatesOnly.map((delegate) => (
-          <div key={delegate.id} className="relative">
+          <div key={delegate.id} className="relative flex">
             {selectMode && (
               <div className="absolute top-2 left-2 z-10">
                 <Checkbox
