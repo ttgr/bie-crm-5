@@ -15,7 +15,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { Plus, Search, Users, Building, UserCheck, Filter, Mail } from "lucide-react"
+import { Plus, Search, Users, Building, UserCheck, Filter, Mail, ArrowUpDown } from "lucide-react"
 import { Delegate } from "@/types/delegate"
 
 export default function Delegates() {
@@ -23,6 +23,7 @@ export default function Delegates() {
   const [activeTab, setActiveTab] = useState("all")
   const [selectedMemberState, setSelectedMemberState] = useState<string>("all_states")
   const [selectedNewsletterStatus, setSelectedNewsletterStatus] = useState<string>("all_newsletter")
+  const [sortBy, setSortBy] = useState<string>("newest")
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(12)
 
@@ -89,6 +90,22 @@ export default function Delegates() {
                               (selectedNewsletterStatus === "subscribed" && delegate.isNewsletterSubscribed) ||
                               (selectedNewsletterStatus === "not_subscribed" && !delegate.isNewsletterSubscribed)
     return matchesSearch && matchesTab && matchesMemberState && matchesNewsletter
+  }).sort((a, b) => {
+    const dateA = new Date(a.startDate).getTime()
+    const dateB = new Date(b.startDate).getTime()
+    
+    switch (sortBy) {
+      case "newest":
+        return dateB - dateA // Newest first
+      case "oldest":
+        return dateA - dateB // Oldest first
+      case "name_asc":
+        return a.contactName.localeCompare(b.contactName)
+      case "name_desc":
+        return b.contactName.localeCompare(a.contactName)
+      default:
+        return dateB - dateA
+    }
   })
 
   const totalPages = Math.ceil(filteredDelegates.length / pageSize)
@@ -255,6 +272,18 @@ export default function Delegates() {
               />
             </div>
             <div className="flex gap-2">
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-[180px]">
+                  <ArrowUpDown className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="newest">Newest First</SelectItem>
+                  <SelectItem value="oldest">Oldest First</SelectItem>
+                  <SelectItem value="name_asc">Name A-Z</SelectItem>
+                  <SelectItem value="name_desc">Name Z-A</SelectItem>
+                </SelectContent>
+              </Select>
               <Select value={selectedMemberState} onValueChange={setSelectedMemberState}>
                 <SelectTrigger className="w-[200px]">
                   <Filter className="h-4 w-4 mr-2" />
@@ -300,7 +329,7 @@ export default function Delegates() {
           <h2 className="text-lg font-semibold">
             {filteredDelegates.length} member{filteredDelegates.length !== 1 ? 's' : ''}
           </h2>
-          {(activeTab !== 'all' || selectedMemberState !== "all_states" || selectedNewsletterStatus !== "all_newsletter") && (
+          {(activeTab !== 'all' || selectedMemberState !== "all_states" || selectedNewsletterStatus !== "all_newsletter" || sortBy !== "newest") && (
             <div className="flex gap-2">
               {activeTab !== 'all' && (
                 <Badge variant="secondary">
@@ -317,6 +346,13 @@ export default function Delegates() {
               {selectedNewsletterStatus !== "all_newsletter" && (
                 <Badge variant="outline">
                   {selectedNewsletterStatus === 'subscribed' ? 'Newsletter: Subscribed' : 'Newsletter: Not Subscribed'}
+                </Badge>
+              )}
+              {sortBy !== "newest" && (
+                <Badge variant="outline">
+                  Sort: {sortBy === "oldest" ? "Oldest First" : 
+                         sortBy === "name_asc" ? "Name A-Z" : 
+                         sortBy === "name_desc" ? "Name Z-A" : "Newest First"}
                 </Badge>
               )}
             </div>
