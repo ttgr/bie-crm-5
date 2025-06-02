@@ -169,7 +169,7 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
           </Button>
           {delegate.isActive && (
             <Button variant="destructive" size="sm" onClick={() => onEndMembership?.(delegate)} className="flex-1">
-              End Membership
+              Denounce
             </Button>
           )}
         </div>
