@@ -16,7 +16,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Plus, Search, Users, Building, UserCheck, Filter, Mail, ArrowUpDown, Download, FileExcel } from "lucide-react"
+import { Plus, Search, Users, Building, UserCheck, Filter, Mail, ArrowUpDown, Download, FileSpreadsheet } from "lucide-react"
 import { Delegate } from "@/types/delegate"
 import { exportDelegatesToExcel } from "@/utils/excelExport"
 import { useToast } from "@/hooks/use-toast"
@@ -328,7 +328,7 @@ export default function Delegates() {
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" onClick={handleExportSelected} disabled={selectedDelegates.size === 0}>
-                  <FileExcel className="h-4 w-4 mr-2" />
+                  <FileSpreadsheet className="h-4 w-4 mr-2" />
                   Export Selected ({selectedDelegates.size})
                 </Button>
                 <Button variant="outline" onClick={handleExportFiltered}>
