@@ -4,7 +4,7 @@ import { Delegate } from "@/types/delegate"
 
 export function useDelegates() {
   const [searchTerm, setSearchTerm] = useState("")
-  const [activeTab, setActiveTab] = useState("all")
+  const [activeTab, setActiveTab] = useState("active")
   const [selectedMemberState, setSelectedMemberState] = useState<string>("all_states")
   const [selectedNewsletterStatus, setSelectedNewsletterStatus] = useState<string>("all_newsletter")
   const [sortBy, setSortBy] = useState<string>("newest")
