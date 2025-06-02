@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { Delegate } from "@/types/delegate"
+import { Delegate, DelegateNote } from "@/types/delegate"
 
 export function useDelegates() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -81,6 +81,19 @@ export function useDelegates() {
       'Second Secretary', 'Trade Commissioner', 'Economic Advisor', 'Diplomatic Attaché'
     ]
 
+    const noteTemplates = [
+      'Excellent communication skills',
+      'Very responsive to emails',
+      'Strong background in trade relations',
+      'Speaks multiple languages fluently',
+      'Specializes in environmental policy',
+      'Good networking connections',
+      'Prefers video calls over phone',
+      'Available for weekend meetings',
+      'Has experience with international law',
+      'Focus on technology partnerships'
+    ]
+
     for (let i = 1; i <= 400; i++) {
       const isOrganization = Math.random() > 0.7
       const isActive = Math.random() > 0.2
@@ -89,6 +102,20 @@ export function useDelegates() {
       const baseEmail = isOrganization 
         ? organizations[Math.floor(Math.random() * organizations.length)].toLowerCase().replace(/\s+/g, '') + Math.floor(i/10)
         : names[Math.floor(Math.random() * names.length)].toLowerCase().replace(/\s+/g, '') + Math.floor(i/20)
+      
+      // Generate random notes for some delegates
+      const notes: DelegateNote[] = []
+      if (Math.random() > 0.6) { // 40% chance of having notes
+        const numNotes = Math.floor(Math.random() * 3) + 1 // 1-3 notes
+        for (let j = 0; j < numNotes; j++) {
+          const daysAgo = Math.floor(Math.random() * 30) // Notes from last 30 days
+          notes.push({
+            id: `${i}-${j}`,
+            text: noteTemplates[Math.floor(Math.random() * noteTemplates.length)],
+            createdAt: new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000).toISOString()
+          })
+        }
+      }
       
       delegates.push({
         id: i.toString(),
@@ -112,7 +139,7 @@ export function useDelegates() {
           `+${Math.floor(Math.random() * 999) + 1} (${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
           ...(Math.random() > 0.7 ? [`+${Math.floor(Math.random() * 999) + 1} (${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`] : [])
         ],
-        notes: Math.random() > 0.5 ? `Delegate representing ${country.name}. ${Math.random() > 0.5 ? 'Speaks multiple languages.' : 'Focus on trade relations.'}` : undefined,
+        notes,
         language: country.language
       })
     }

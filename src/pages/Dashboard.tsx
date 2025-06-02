@@ -88,7 +88,18 @@ export default function Dashboard() {
       role: 'Senior Delegate',
       emails: ['sarah.johnson@email.com'],
       phones: ['+1 (555) 123-4567'],
-      notes: 'Excellent communication skills',
+      notes: [
+        {
+          id: '1',
+          text: 'Excellent communication skills',
+          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() // 2 days ago
+        },
+        {
+          id: '2',
+          text: 'Very responsive to emails',
+          createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() // 5 days ago
+        }
+      ],
       language: 'English'
     },
     {
@@ -117,7 +128,13 @@ export default function Dashboard() {
       role: 'Policy Advisor',
       emails: ['emma.wilson@gov.ny.us', 'e.wilson@personal.com'],
       phones: ['+1 (555) 456-7890'],
-      notes: 'Specializes in environmental policy',
+      notes: [
+        {
+          id: '3',
+          text: 'Specializes in environmental policy',
+          createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() // 10 days ago
+        }
+      ],
       language: 'English'
     },
     {

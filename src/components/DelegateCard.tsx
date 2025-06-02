@@ -3,11 +3,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Textarea } from "@/components/ui/textarea"
-import { Building, Calendar, CalendarOff, MapPin, Mail, Phone, FileText, Bell, BellOff, Globe } from "lucide-react"
-import { Delegate } from "@/types/delegate"
+import { Building, Calendar, CalendarOff, MapPin, Mail, Phone, FileText, Bell, Globe, StickyNote } from "lucide-react"
+import { Delegate, DelegateNote } from "@/types/delegate"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
+import { NotesModal } from "@/components/NotesModal"
 
 interface DelegateCardProps {
   delegate: Delegate
@@ -17,8 +17,7 @@ interface DelegateCardProps {
 
 export function DelegateCard({ delegate, onEndMembership, onViewContact }: DelegateCardProps) {
   const navigate = useNavigate()
-  const [notes, setNotes] = useState(delegate.notes || "")
-  const [isEditingNotes, setIsEditingNotes] = useState(false)
+  const [isNotesModalOpen, setIsNotesModalOpen] = useState(false)
   
   const initials = delegate.contactName
     .split(' ')
@@ -34,10 +33,15 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
     navigate(`/contacts/${delegate.contactId}`)
   }
 
-  const handleSaveNotes = () => {
+  const handleAddNote = (noteText: string) => {
     // In a real app, this would save to the backend
-    console.log('Saving notes:', notes, 'for delegate:', delegate.id)
-    setIsEditingNotes(false)
+    const newNote: DelegateNote = {
+      id: Date.now().toString(),
+      text: noteText,
+      createdAt: new Date().toISOString()
+    }
+    console.log('Adding note:', newNote, 'for delegate:', delegate.id)
+    // This would update the delegate's notes in the backend
   }
 
   const getLanguageIcon = (language: 'English' | 'French') => {
@@ -61,143 +65,161 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
     )
   }
 
+  const notes = delegate.notes || []
+  const hasRecentNotes = notes.some(note => {
+    const noteDate = new Date(note.createdAt)
+    const sevenDaysAgo = new Date()
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+    return noteDate > sevenDaysAgo
+  })
+
   return (
-    <Card className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
-      <CardHeader className="pb-3">
-        <div className="flex items-start gap-3">
-          <Avatar className="h-10 w-10">
-            <AvatarFallback className={`${delegate.contactType === 'organization' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
-              {delegate.contactType === 'organization' ? <Building className="h-4 w-4" /> : initials}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 truncate">{delegate.contactName}</h3>
-            <div className="flex flex-wrap gap-1 mt-1">
-              <Badge variant={delegate.membershipType === 'delegate' ? 'default' : 'secondary'} className="text-xs">
-                {delegate.membershipType === 'delegate' ? 'Delegate' : 'Member State'}
-              </Badge>
-              <Badge variant={delegate.isActive ? 'default' : 'destructive'} className="text-xs">
-                {delegate.isActive ? 'Current' : 'Former'}
-              </Badge>
-              {delegate.isNewsletterSubscribed && (
-                <Badge variant="outline" className="text-xs">
-                  <Bell className="h-3 w-3 mr-1" />
-                  Newsletter
+    <>
+      <Card className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
+        <CardHeader className="pb-3">
+          <div className="flex items-start gap-3">
+            <Avatar className="h-10 w-10">
+              <AvatarFallback className={`${delegate.contactType === 'organization' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
+                {delegate.contactType === 'organization' ? <Building className="h-4 w-4" /> : initials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-gray-900 truncate">{delegate.contactName}</h3>
+              <div className="flex flex-wrap gap-1 mt-1">
+                <Badge variant={delegate.membershipType === 'delegate' ? 'default' : 'secondary'} className="text-xs">
+                  {delegate.membershipType === 'delegate' ? 'Delegate' : 'Member State'}
                 </Badge>
-              )}
-            </div>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        {/* Member State and Role */}
-        {delegate.memberState && (
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <MapPin className="h-3 w-3" />
-            <span>{delegate.memberState}</span>
-          </div>
-        )}
-        {delegate.role && (
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <FileText className="h-3 w-3" />
-            <span>{delegate.role}</span>
-          </div>
-        )}
-
-        {/* Language Preference with Icon */}
-        {getLanguageIcon(delegate.language)}
-
-        {/* Dates */}
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Calendar className="h-3 w-3" />
-          <span>Started: {formatDate(delegate.startDate)}</span>
-        </div>
-        {delegate.endDate && (
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <CalendarOff className="h-3 w-3" />
-            <span>Ended: {formatDate(delegate.endDate)}</span>
-          </div>
-        )}
-
-        {/* Contact Information */}
-        <div className="space-y-2">
-          {delegate.emails.length > 0 && (
-            <div>
-              <div className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
-                <Mail className="h-3 w-3" />
-                <span>Email{delegate.emails.length > 1 ? 's' : ''}</span>
+                <Badge variant={delegate.isActive ? 'default' : 'destructive'} className="text-xs">
+                  {delegate.isActive ? 'Current' : 'Former'}
+                </Badge>
+                {delegate.isNewsletterSubscribed && (
+                  <Badge variant="outline" className="text-xs">
+                    <Bell className="h-3 w-3 mr-1" />
+                    Newsletter
+                  </Badge>
+                )}
               </div>
-              {delegate.emails.map((email, index) => (
-                <div key={index} className="text-xs text-gray-600 ml-5 truncate">
-                  {email}
-                </div>
-              ))}
+            </div>
+            {/* Notes indicator */}
+            {notes.length > 0 && (
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsNotesModalOpen(true)}
+                  className="h-8 w-8 p-0"
+                  title={`${notes.length} notes`}
+                >
+                  <StickyNote className={`h-4 w-4 ${hasRecentNotes ? 'text-blue-600' : 'text-gray-400'}`} />
+                </Button>
+                <Badge 
+                  variant={hasRecentNotes ? "default" : "secondary"} 
+                  className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                >
+                  {notes.length}
+                </Badge>
+                {hasRecentNotes && (
+                  <div className="absolute -top-1 -right-1 h-2 w-2 bg-blue-600 rounded-full animate-pulse"></div>
+                )}
+              </div>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {/* Member State and Role */}
+          {delegate.memberState && (
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <MapPin className="h-3 w-3" />
+              <span>{delegate.memberState}</span>
+            </div>
+          )}
+          {delegate.role && (
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <FileText className="h-3 w-3" />
+              <span>{delegate.role}</span>
             </div>
           )}
 
-          {delegate.phones.length > 0 && (
-            <div>
-              <div className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
-                <Phone className="h-3 w-3" />
-                <span>Phone{delegate.phones.length > 1 ? 's' : ''}</span>
-              </div>
-              {delegate.phones.map((phone, index) => (
-                <div key={index} className="text-xs text-gray-600 ml-5">
-                  {phone}
-                </div>
-              ))}
+          {/* Language Preference with Icon */}
+          {getLanguageIcon(delegate.language)}
+
+          {/* Dates */}
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Calendar className="h-3 w-3" />
+            <span>Started: {formatDate(delegate.startDate)}</span>
+          </div>
+          {delegate.endDate && (
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <CalendarOff className="h-3 w-3" />
+              <span>Ended: {formatDate(delegate.endDate)}</span>
             </div>
           )}
-        </div>
 
-        {/* Notes Section */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Notes</span>
+          {/* Contact Information */}
+          <div className="space-y-2">
+            {delegate.emails.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
+                  <Mail className="h-3 w-3" />
+                  <span>Email{delegate.emails.length > 1 ? 's' : ''}</span>
+                </div>
+                {delegate.emails.map((email, index) => (
+                  <div key={index} className="text-xs text-gray-600 ml-5 truncate">
+                    {email}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {delegate.phones.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
+                  <Phone className="h-3 w-3" />
+                  <span>Phone{delegate.phones.length > 1 ? 's' : ''}</span>
+                </div>
+                {delegate.phones.map((phone, index) => (
+                  <div key={index} className="text-xs text-gray-600 ml-5">
+                    {phone}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Add Notes Button - only show if no notes exist */}
+          {notes.length === 0 && (
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setIsEditingNotes(!isEditingNotes)}
-              className="h-6 px-2 text-xs"
+              onClick={() => setIsNotesModalOpen(true)}
+              className="w-full text-xs text-gray-500 hover:text-gray-700"
             >
-              {isEditingNotes ? 'Cancel' : 'Edit'}
+              <StickyNote className="h-3 w-3 mr-2" />
+              Add Notes
             </Button>
-          </div>
-          {isEditingNotes ? (
-            <div className="space-y-2">
-              <Textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Add notes about this delegate..."
-                className="min-h-[60px] text-xs"
-              />
-              <Button
-                onClick={handleSaveNotes}
-                size="sm"
-                className="h-6 px-2 text-xs"
-              >
-                Save
-              </Button>
-            </div>
-          ) : (
-            <div className="text-xs text-gray-600 min-h-[40px] p-2 bg-gray-50 rounded border">
-              {notes || "No notes added"}
-            </div>
           )}
-        </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-2 pt-2">
-          <Button variant="outline" size="sm" onClick={handleViewContact} className="flex-1">
-            View Contact
-          </Button>
-          {delegate.isActive && (
-            <Button variant="destructive" size="sm" onClick={() => onEndMembership?.(delegate)} className="flex-1">
-              Denounce
+          {/* Action Buttons */}
+          <div className="flex gap-2 pt-2">
+            <Button variant="outline" size="sm" onClick={handleViewContact} className="flex-1">
+              View Contact
             </Button>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+            {delegate.isActive && (
+              <Button variant="destructive" size="sm" onClick={() => onEndMembership?.(delegate)} className="flex-1">
+                Denounce
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <NotesModal
+        isOpen={isNotesModalOpen}
+        onClose={() => setIsNotesModalOpen(false)}
+        delegateName={delegate.contactName}
+        notes={notes}
+        onAddNote={handleAddNote}
+      />
+    </>
   )
 }

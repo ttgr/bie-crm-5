@@ -1,4 +1,10 @@
 
+export interface DelegateNote {
+  id: string
+  text: string
+  createdAt: string
+}
+
 export interface Delegate {
   id: string
   contactId: string
@@ -13,6 +19,6 @@ export interface Delegate {
   role?: string // Role within the organization
   emails: string[] // Multiple email addresses
   phones: string[] // Multiple phone numbers
-  notes?: string // Notes about the delegate
+  notes?: DelegateNote[] // Changed to array of timestamped notes
   language: 'English' | 'French' // Preferred communication language
 }
