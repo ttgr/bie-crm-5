@@ -17,11 +17,12 @@ import {
 const mainItems = [
   { title: "Dashboard", url: "/", icon: Home },
   { title: "Contacts", url: "/contacts", icon: Users },
+  { title: "Delegates", url: "/delegates", icon: UserCheck },
   { title: "Events", url: "/events", icon: Calendar },
 ]
 
 export function AppSidebar() {
-  const { collapsed } = useSidebar()
+  const { state } = useSidebar()
   const location = useLocation()
   const currentPath = location.pathname
 
@@ -29,12 +30,12 @@ export function AppSidebar() {
   const isExpanded = mainItems.some((item) => isActive(item.url))
 
   return (
-    <Sidebar className={collapsed ? "w-14" : "w-60"} collapsible>
+    <Sidebar className={state === "collapsed" ? "w-14" : "w-60"} collapsible="icon">
       <div className="p-4 border-b">
-        <h2 className={`font-bold text-xl text-primary ${collapsed ? "hidden" : ""}`}>
+        <h2 className={`font-bold text-xl text-primary ${state === "collapsed" ? "hidden" : ""}`}>
           ContactHub
         </h2>
-        {collapsed && (
+        {state === "collapsed" && (
           <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
             <span className="text-white font-bold text-sm">C</span>
           </div>
@@ -44,7 +45,7 @@ export function AppSidebar() {
       <SidebarTrigger className="m-2 self-end" />
 
       <SidebarContent>
-        <SidebarGroup open={isExpanded}>
+        <SidebarGroup>
           <SidebarGroupLabel>Main Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -63,7 +64,7 @@ export function AppSidebar() {
                       }
                     >
                       <item.icon className="h-4 w-4" />
-                      {!collapsed && <span>{item.title}</span>}
+                      {state !== "collapsed" && <span>{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

@@ -2,8 +2,10 @@
 import { StatsCard } from "@/components/StatsCard"
 import { ContactCard, Contact } from "@/components/ContactCard"
 import { EventCard, Event } from "@/components/EventCard"
+import { DelegateCard } from "@/components/DelegateCard"
 import { Users, Calendar, Building, UserCheck } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Delegate } from "@/types/delegate"
 
 export default function Dashboard() {
   // Mock data - in a real app, this would come from your backend
@@ -11,7 +13,9 @@ export default function Dashboard() {
     totalContacts: 247,
     individuals: 198,
     organizations: 49,
-    upcomingEvents: 12
+    upcomingEvents: 12,
+    activeDelegates: 15,
+    activeMemberStates: 8
   }
 
   const recentContacts: Contact[] = [
@@ -71,6 +75,63 @@ export default function Dashboard() {
     }
   ]
 
+  const recentDelegates: Delegate[] = [
+    {
+      id: '1',
+      contactId: '1',
+      contactName: 'Sarah Johnson',
+      contactType: 'individual',
+      startDate: '2024-11-15',
+      isActive: true,
+      membershipType: 'delegate'
+    },
+    {
+      id: '2',
+      contactId: '2',
+      contactName: 'Global Corp',
+      contactType: 'organization',
+      startDate: '2024-11-10',
+      isActive: true,
+      membershipType: 'member_state'
+    },
+    {
+      id: '3',
+      contactId: '3',
+      contactName: 'Emma Wilson',
+      contactType: 'individual',
+      startDate: '2024-11-05',
+      isActive: true,
+      membershipType: 'delegate'
+    },
+    {
+      id: '4',
+      contactId: '4',
+      contactName: 'Innovation Labs',
+      contactType: 'organization',
+      startDate: '2024-11-01',
+      isActive: true,
+      membershipType: 'member_state'
+    },
+    {
+      id: '5',
+      contactId: '5',
+      contactName: 'John Smith',
+      contactType: 'individual',
+      startDate: '2024-10-28',
+      isActive: true,
+      membershipType: 'delegate'
+    },
+    {
+      id: '6',
+      contactId: '6',
+      contactName: 'Future Systems',
+      contactType: 'organization',
+      startDate: '2024-10-25',
+      isActive: true,
+      membershipType: 'member_state'
+    }
+  ]
+
   return (
     <div className="space-y-6">
       <div>
@@ -79,7 +140,7 @@ export default function Dashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
         <StatsCard
           title="Total Contacts"
           value={stats.totalContacts}
@@ -100,6 +161,20 @@ export default function Dashboard() {
           description="Company contacts"
         />
         <StatsCard
+          title="Current Delegates"
+          value={stats.activeDelegates}
+          icon={UserCheck}
+          description="Active individual delegates"
+          trend={{ value: 2, isPositive: true }}
+        />
+        <StatsCard
+          title="Member States"
+          value={stats.activeMemberStates}
+          icon={Building}
+          description="Active member organizations"
+          trend={{ value: 1, isPositive: true }}
+        />
+        <StatsCard
           title="Upcoming Events"
           value={stats.upcomingEvents}
           icon={Calendar}
@@ -109,7 +184,7 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Contacts */}
         <Card>
           <CardHeader>
@@ -145,6 +220,26 @@ export default function Dashboard() {
                 event={event}
                 onEdit={(event) => console.log('Edit event:', event)}
                 onViewParticipants={(event) => console.log('View participants for:', event)}
+              />
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Recent Delegate Assignments */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <UserCheck className="h-5 w-5" />
+              Recent Memberships
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 max-h-96 overflow-y-auto">
+            {recentDelegates.map((delegate) => (
+              <DelegateCard
+                key={delegate.id}
+                delegate={delegate}
+                onEndMembership={(delegate) => console.log('End membership for:', delegate)}
+                onViewContact={(delegate) => console.log('View contact for:', delegate)}
               />
             ))}
           </CardContent>

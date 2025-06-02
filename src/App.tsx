@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import Index from "./pages/Index";
 import Contacts from "./pages/Contacts";
+import Delegates from "./pages/Delegates";
 import Events from "./pages/Events";
 import NotFound from "./pages/NotFound";
 
@@ -21,6 +22,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/contacts" element={<Layout><Contacts /></Layout>} />
+          <Route path="/delegates" element={<Layout><Delegates /></Layout>} />
           <Route path="/events" element={<Layout><Events /></Layout>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
