@@ -13,6 +13,55 @@ export function useDelegates() {
   // Mock data generation
   const generateMockDelegates = (): Delegate[] => {
     const delegates: Delegate[] = []
+    const countries = [
+      { name: 'United States', language: 'English' as const },
+      { name: 'Canada', language: Math.random() > 0.5 ? 'English' : 'French' as const },
+      { name: 'United Kingdom', language: 'English' as const },
+      { name: 'Germany', language: 'English' as const },
+      { name: 'France', language: 'French' as const },
+      { name: 'Italy', language: 'English' as const },
+      { name: 'Spain', language: 'English' as const },
+      { name: 'Netherlands', language: 'English' as const },
+      { name: 'Sweden', language: 'English' as const },
+      { name: 'Norway', language: 'English' as const },
+      { name: 'Denmark', language: 'English' as const },
+      { name: 'Finland', language: 'English' as const },
+      { name: 'Poland', language: 'English' as const },
+      { name: 'Czech Republic', language: 'English' as const },
+      { name: 'Austria', language: 'English' as const },
+      { name: 'Switzerland', language: Math.random() > 0.5 ? 'English' : 'French' as const },
+      { name: 'Japan', language: 'English' as const },
+      { name: 'South Korea', language: 'English' as const },
+      { name: 'Australia', language: 'English' as const },
+      { name: 'New Zealand', language: 'English' as const },
+      { name: 'Brazil', language: 'English' as const },
+      { name: 'Argentina', language: 'English' as const },
+      { name: 'Mexico', language: 'English' as const },
+      { name: 'Chile', language: 'English' as const },
+      { name: 'India', language: 'English' as const },
+      { name: 'Singapore', language: 'English' as const },
+      { name: 'Thailand', language: 'English' as const },
+      { name: 'Malaysia', language: 'English' as const },
+      { name: 'South Africa', language: 'English' as const },
+      { name: 'Egypt', language: 'English' as const },
+      { name: 'Morocco', language: 'French' as const },
+      { name: 'Turkey', language: 'English' as const },
+      { name: 'Russia', language: 'English' as const },
+      { name: 'Ukraine', language: 'English' as const },
+      { name: 'Romania', language: 'English' as const },
+      { name: 'Bulgaria', language: 'English' as const },
+      { name: 'Greece', language: 'English' as const },
+      { name: 'Portugal', language: 'English' as const },
+      { name: 'Ireland', language: 'English' as const },
+      { name: 'Belgium', language: Math.random() > 0.5 ? 'English' : 'French' as const },
+      { name: 'Luxembourg', language: 'French' as const },
+      { name: 'Senegal', language: 'French' as const },
+      { name: 'Mali', language: 'French' as const },
+      { name: 'Ivory Coast', language: 'French' as const },
+      { name: 'Tunisia', language: 'French' as const },
+      { name: 'Algeria', language: 'French' as const },
+      { name: 'Madagascar', language: 'French' as const }
+    ]
     const names = [
       'Sarah Johnson', 'Michael Chen', 'Emma Wilson', 'David Rodriguez', 'Lisa Anderson',
       'James Brown', 'Maria Garcia', 'Robert Taylor', 'Jennifer Davis', 'Christopher Wilson',
@@ -25,13 +74,6 @@ export function useDelegates() {
       'Ministry of Foreign Affairs', 'Department of International Trade', 'Embassy of Economic Relations',
       'Consulate General', 'Trade Commission', 'Cultural Affairs Office', 'Economic Development Agency',
       'International Relations Ministry', 'Diplomatic Mission', 'Commercial Attaché Office'
-    ]
-    const countries = [
-      'United States', 'Canada', 'United Kingdom', 'Germany', 'France', 'Italy', 'Spain', 'Netherlands',
-      'Sweden', 'Norway', 'Denmark', 'Finland', 'Poland', 'Czech Republic', 'Austria', 'Switzerland',
-      'Japan', 'South Korea', 'Australia', 'New Zealand', 'Brazil', 'Argentina', 'Mexico', 'Chile',
-      'India', 'Singapore', 'Thailand', 'Malaysia', 'South Africa', 'Egypt', 'Morocco', 'Turkey',
-      'Russia', 'Ukraine', 'Romania', 'Bulgaria', 'Greece', 'Portugal', 'Ireland', 'Belgium'
     ]
     const roles = [
       'Ambassador', 'Deputy Ambassador', 'Trade Representative', 'Economic Attaché',
@@ -52,25 +94,26 @@ export function useDelegates() {
         id: i.toString(),
         contactId: i.toString(),
         contactName: isOrganization 
-          ? organizations[Math.floor(Math.random() * organizations.length)] + ` - ${country}`
+          ? organizations[Math.floor(Math.random() * organizations.length)] + ` - ${country.name}`
           : names[Math.floor(Math.random() * names.length)],
         contactType: isOrganization ? 'organization' : 'individual',
         startDate: new Date(2020 + Math.floor(Math.random() * 5), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
         endDate: !isActive ? new Date(2023 + Math.floor(Math.random() * 2), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0] : undefined,
         isActive,
         membershipType,
-        memberState: country, // Now represents the country the delegate represents
+        memberState: country.name,
         isNewsletterSubscribed: Math.random() > 0.4,
         role: membershipType === 'delegate' ? roles[Math.floor(Math.random() * roles.length)] : undefined,
         emails: [
-          `${baseEmail}@${country.toLowerCase().replace(/\s+/g, '')}.gov`,
+          `${baseEmail}@${country.name.toLowerCase().replace(/\s+/g, '')}.gov`,
           ...(Math.random() > 0.6 ? [`${baseEmail}.official@embassy.org`] : [])
         ],
         phones: [
           `+${Math.floor(Math.random() * 999) + 1} (${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
           ...(Math.random() > 0.7 ? [`+${Math.floor(Math.random() * 999) + 1} (${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`] : [])
         ],
-        notes: Math.random() > 0.5 ? `Delegate representing ${country}. ${Math.random() > 0.5 ? 'Speaks multiple languages.' : 'Focus on trade relations.'}` : undefined
+        notes: Math.random() > 0.5 ? `Delegate representing ${country.name}. ${Math.random() > 0.5 ? 'Speaks multiple languages.' : 'Focus on trade relations.'}` : undefined,
+        language: country.language
       })
     }
     

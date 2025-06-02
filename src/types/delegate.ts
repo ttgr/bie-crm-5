@@ -14,4 +14,5 @@ export interface Delegate {
   emails: string[] // Multiple email addresses
   phones: string[] // Multiple phone numbers
   notes?: string // Notes about the delegate
+  language: 'English' | 'French' // Preferred communication language
 }

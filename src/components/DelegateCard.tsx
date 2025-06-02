@@ -1,10 +1,9 @@
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Textarea } from "@/components/ui/textarea"
-import { Building, Calendar, CalendarOff, MapPin, Mail, Phone, FileText, Bell, BellOff } from "lucide-react"
+import { Building, Calendar, CalendarOff, MapPin, Mail, Phone, FileText, Bell, BellOff, Languages } from "lucide-react"
 import { Delegate } from "@/types/delegate"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
@@ -82,6 +81,12 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
             <span>{delegate.role}</span>
           </div>
         )}
+
+        {/* Language Preference */}
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <Languages className="h-3 w-3" />
+          <span>Language: {delegate.language}</span>
+        </div>
 
         {/* Dates */}
         <div className="flex items-center gap-2 text-sm text-gray-600">
