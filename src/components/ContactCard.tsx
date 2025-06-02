@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Building, Mail, Phone, MapPin, Calendar } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 export interface Contact {
   id: string
@@ -24,11 +25,17 @@ interface ContactCardProps {
 }
 
 export function ContactCard({ contact, onEdit, onViewEvents }: ContactCardProps) {
+  const navigate = useNavigate()
+  
   const initials = contact.name
     .split(' ')
     .map(name => name[0])
     .join('')
     .toUpperCase()
+
+  const handleViewContact = () => {
+    navigate(`/contacts/${contact.id}`)
+  }
 
   return (
     <Card className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
@@ -75,8 +82,8 @@ export function ContactCard({ contact, onEdit, onViewEvents }: ContactCardProps)
           <span>{contact.eventsCount} events</span>
         </div>
         <div className="flex gap-2 pt-2">
-          <Button variant="outline" size="sm" onClick={() => onEdit?.(contact)} className="flex-1">
-            Edit
+          <Button variant="outline" size="sm" onClick={handleViewContact} className="flex-1">
+            View
           </Button>
           <Button variant="default" size="sm" onClick={() => onViewEvents?.(contact)} className="flex-1">
             Events

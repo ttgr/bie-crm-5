@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Building, Calendar, Users, CalendarOff } from "lucide-react"
 import { Delegate } from "@/types/delegate"
+import { useNavigate } from "react-router-dom"
 
 interface DelegateCardProps {
   delegate: Delegate
@@ -13,6 +14,8 @@ interface DelegateCardProps {
 }
 
 export function DelegateCard({ delegate, onEndMembership, onViewContact }: DelegateCardProps) {
+  const navigate = useNavigate()
+  
   const initials = delegate.contactName
     .split(' ')
     .map(name => name[0])
@@ -21,6 +24,10 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString()
+  }
+
+  const handleViewContact = () => {
+    navigate(`/contacts/${delegate.contactId}`)
   }
 
   return (
@@ -57,7 +64,7 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
           </div>
         )}
         <div className="flex gap-2 pt-2">
-          <Button variant="outline" size="sm" onClick={() => onViewContact?.(delegate)} className="flex-1">
+          <Button variant="outline" size="sm" onClick={handleViewContact} className="flex-1">
             View Contact
           </Button>
           {delegate.isActive && (
