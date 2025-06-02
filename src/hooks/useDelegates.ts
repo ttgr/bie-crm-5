@@ -28,11 +28,18 @@ export function useDelegates() {
       'California', 'New York', 'Texas', 'Florida', 'Illinois', 'Pennsylvania', 
       'Ohio', 'Georgia', 'North Carolina', 'Michigan', 'New Jersey', 'Virginia'
     ]
+    const roles = [
+      'Senior Delegate', 'Lead Representative', 'Policy Advisor', 'Trade Representative',
+      'Economic Attaché', 'Cultural Liaison', 'Technical Advisor', 'Deputy Delegate'
+    ]
 
     for (let i = 1; i <= 400; i++) {
       const isOrganization = Math.random() > 0.7
       const isActive = Math.random() > 0.2
       const membershipType = isOrganization ? 'member_state' : 'delegate'
+      const baseEmail = isOrganization 
+        ? organizations[Math.floor(Math.random() * organizations.length)].toLowerCase().replace(/\s+/g, '') + Math.floor(i/10)
+        : names[Math.floor(Math.random() * names.length)].toLowerCase().replace(/\s+/g, '') + Math.floor(i/20)
       
       delegates.push({
         id: i.toString(),
@@ -46,7 +53,17 @@ export function useDelegates() {
         isActive,
         membershipType,
         memberState: membershipType === 'delegate' ? memberStates[Math.floor(Math.random() * memberStates.length)] : undefined,
-        isNewsletterSubscribed: Math.random() > 0.4
+        isNewsletterSubscribed: Math.random() > 0.4,
+        role: membershipType === 'delegate' ? roles[Math.floor(Math.random() * roles.length)] : undefined,
+        emails: [
+          `${baseEmail}@example.com`,
+          ...(Math.random() > 0.6 ? [`${baseEmail}.alt@company.com`] : [])
+        ],
+        phones: [
+          `+1 (${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
+          ...(Math.random() > 0.7 ? [`+1 (${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`] : [])
+        ],
+        notes: Math.random() > 0.5 ? `Sample note for delegate ${i}` : undefined
       })
     }
     
