@@ -88,7 +88,8 @@ export default function Dashboard() {
       role: 'Senior Delegate',
       emails: ['sarah.johnson@email.com'],
       phones: ['+1 (555) 123-4567'],
-      notes: 'Excellent communication skills'
+      notes: 'Excellent communication skills',
+      language: 'English'
     },
     {
       id: '2',
@@ -100,7 +101,8 @@ export default function Dashboard() {
       membershipType: 'member_state',
       isNewsletterSubscribed: false,
       emails: ['contact@globalcorp.com'],
-      phones: ['+1 (555) 987-6543']
+      phones: ['+1 (555) 987-6543'],
+      language: 'English'
     },
     {
       id: '3',
@@ -115,7 +117,8 @@ export default function Dashboard() {
       role: 'Policy Advisor',
       emails: ['emma.wilson@gov.ny.us', 'e.wilson@personal.com'],
       phones: ['+1 (555) 456-7890'],
-      notes: 'Specializes in environmental policy'
+      notes: 'Specializes in environmental policy',
+      language: 'English'
     },
     {
       id: '4',
@@ -127,7 +130,8 @@ export default function Dashboard() {
       membershipType: 'member_state',
       isNewsletterSubscribed: true,
       emails: ['info@innovationlabs.com'],
-      phones: ['+1 (555) 234-5678', '+1 (555) 234-5679']
+      phones: ['+1 (555) 234-5678', '+1 (555) 234-5679'],
+      language: 'French'
     },
     {
       id: '5',
@@ -141,7 +145,8 @@ export default function Dashboard() {
       isNewsletterSubscribed: false,
       role: 'Trade Representative',
       emails: ['john.smith@texas.gov'],
-      phones: ['+1 (555) 345-6789']
+      phones: ['+1 (555) 345-6789'],
+      language: 'English'
     },
     {
       id: '6',
@@ -153,7 +158,8 @@ export default function Dashboard() {
       membershipType: 'member_state',
       isNewsletterSubscribed: true,
       emails: ['contact@futuresystems.com', 'support@futuresystems.com'],
-      phones: ['+1 (555) 567-8901']
+      phones: ['+1 (555) 567-8901'],
+      language: 'French'
     }
   ]
 

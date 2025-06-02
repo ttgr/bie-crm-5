@@ -15,7 +15,7 @@ export function useDelegates() {
     const delegates: Delegate[] = []
     const countries = [
       { name: 'United States', language: 'English' as const },
-      { name: 'Canada', language: Math.random() > 0.5 ? 'English' : 'French' as const },
+      { name: 'Canada', language: Math.random() > 0.5 ? 'English' as const : 'French' as const },
       { name: 'United Kingdom', language: 'English' as const },
       { name: 'Germany', language: 'English' as const },
       { name: 'France', language: 'French' as const },
@@ -29,7 +29,7 @@ export function useDelegates() {
       { name: 'Poland', language: 'English' as const },
       { name: 'Czech Republic', language: 'English' as const },
       { name: 'Austria', language: 'English' as const },
-      { name: 'Switzerland', language: Math.random() > 0.5 ? 'English' : 'French' as const },
+      { name: 'Switzerland', language: Math.random() > 0.5 ? 'English' as const : 'French' as const },
       { name: 'Japan', language: 'English' as const },
       { name: 'South Korea', language: 'English' as const },
       { name: 'Australia', language: 'English' as const },
@@ -53,7 +53,7 @@ export function useDelegates() {
       { name: 'Greece', language: 'English' as const },
       { name: 'Portugal', language: 'English' as const },
       { name: 'Ireland', language: 'English' as const },
-      { name: 'Belgium', language: Math.random() > 0.5 ? 'English' : 'French' as const },
+      { name: 'Belgium', language: Math.random() > 0.5 ? 'English' as const : 'French' as const },
       { name: 'Luxembourg', language: 'French' as const },
       { name: 'Senegal', language: 'French' as const },
       { name: 'Mali', language: 'French' as const },
