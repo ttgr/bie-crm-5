@@ -1,4 +1,5 @@
 
+
 export interface Delegate {
   id: string
   contactId: string
@@ -9,4 +10,6 @@ export interface Delegate {
   isActive: boolean
   membershipType: 'delegate' | 'member_state'
   memberState?: string // Added member state for delegates
+  isNewsletterSubscribed: boolean // Added newsletter subscription status
 }
+

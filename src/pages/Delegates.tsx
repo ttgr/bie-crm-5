@@ -15,13 +15,14 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { Plus, Search, Users, Building, UserCheck, Filter } from "lucide-react"
+import { Plus, Search, Users, Building, UserCheck, Filter, Mail } from "lucide-react"
 import { Delegate } from "@/types/delegate"
 
 export default function Delegates() {
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("all")
   const [selectedMemberState, setSelectedMemberState] = useState<string>("all_states")
+  const [selectedNewsletterStatus, setSelectedNewsletterStatus] = useState<string>("all_newsletter")
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(12)
 
@@ -59,7 +60,8 @@ export default function Delegates() {
         endDate: !isActive ? new Date(2023 + Math.floor(Math.random() * 2), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0] : undefined,
         isActive,
         membershipType,
-        memberState: membershipType === 'delegate' ? memberStates[Math.floor(Math.random() * memberStates.length)] : undefined
+        memberState: membershipType === 'delegate' ? memberStates[Math.floor(Math.random() * memberStates.length)] : undefined,
+        isNewsletterSubscribed: Math.random() > 0.4 // Random newsletter subscription status
       })
     }
     
@@ -83,7 +85,10 @@ export default function Delegates() {
                       (activeTab === 'delegates' && delegate.membershipType === 'delegate') ||
                       (activeTab === 'member_states' && delegate.membershipType === 'member_state')
     const matchesMemberState = selectedMemberState === "all_states" || delegate.memberState === selectedMemberState
-    return matchesSearch && matchesTab && matchesMemberState
+    const matchesNewsletter = selectedNewsletterStatus === "all_newsletter" || 
+                              (selectedNewsletterStatus === "subscribed" && delegate.isNewsletterSubscribed) ||
+                              (selectedNewsletterStatus === "not_subscribed" && !delegate.isNewsletterSubscribed)
+    return matchesSearch && matchesTab && matchesMemberState && matchesNewsletter
   })
 
   const totalPages = Math.ceil(filteredDelegates.length / pageSize)
@@ -93,6 +98,7 @@ export default function Delegates() {
 
   const activeDelegates = delegates.filter(d => d.isActive && d.membershipType === 'delegate')
   const activeMemberStates = delegates.filter(d => d.isActive && d.membershipType === 'member_state')
+  const newsletterSubscribers = delegates.filter(d => d.isNewsletterSubscribed)
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
@@ -167,7 +173,7 @@ export default function Delegates() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
@@ -203,6 +209,19 @@ export default function Delegates() {
               <div>
                 <p className="text-sm text-gray-600">Total Active</p>
                 <p className="text-2xl font-bold">{activeDelegates.length + activeMemberStates.length}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-orange-100 rounded-lg">
+                <Mail className="h-5 w-5 text-orange-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Newsletter Subscribers</p>
+                <p className="text-2xl font-bold">{newsletterSubscribers.length}</p>
               </div>
             </div>
           </CardContent>
@@ -250,6 +269,17 @@ export default function Delegates() {
                   ))}
                 </SelectContent>
               </Select>
+              <Select value={selectedNewsletterStatus} onValueChange={setSelectedNewsletterStatus}>
+                <SelectTrigger className="w-[200px]">
+                  <Mail className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Newsletter Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all_newsletter">All Newsletter Status</SelectItem>
+                  <SelectItem value="subscribed">Subscribed</SelectItem>
+                  <SelectItem value="not_subscribed">Not Subscribed</SelectItem>
+                </SelectContent>
+              </Select>
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
                 <TabsList>
                   <TabsTrigger value="all">All</TabsTrigger>
@@ -270,7 +300,7 @@ export default function Delegates() {
           <h2 className="text-lg font-semibold">
             {filteredDelegates.length} member{filteredDelegates.length !== 1 ? 's' : ''}
           </h2>
-          {(activeTab !== 'all' || selectedMemberState !== "all_states") && (
+          {(activeTab !== 'all' || selectedMemberState !== "all_states" || selectedNewsletterStatus !== "all_newsletter") && (
             <div className="flex gap-2">
               {activeTab !== 'all' && (
                 <Badge variant="secondary">
@@ -282,6 +312,11 @@ export default function Delegates() {
               {selectedMemberState !== "all_states" && (
                 <Badge variant="outline">
                   {selectedMemberState}
+                </Badge>
+              )}
+              {selectedNewsletterStatus !== "all_newsletter" && (
+                <Badge variant="outline">
+                  {selectedNewsletterStatus === 'subscribed' ? 'Newsletter: Subscribed' : 'Newsletter: Not Subscribed'}
                 </Badge>
               )}
             </div>
@@ -351,7 +386,7 @@ export default function Delegates() {
             <UserCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No members found</h3>
             <p className="text-gray-600 mb-4">
-              {searchTerm || selectedMemberState
+              {searchTerm || selectedMemberState || selectedNewsletterStatus
                 ? "Try adjusting your search terms or filters"
                 : "Get started by assigning membership to contacts"}
             </p>
