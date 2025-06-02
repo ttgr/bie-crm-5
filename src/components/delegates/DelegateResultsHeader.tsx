@@ -50,9 +50,8 @@ export function DelegateResultsHeader({
           <div className="flex gap-2">
             {activeTab !== 'all' && (
               <Badge variant="secondary">
-                {activeTab === 'active' ? 'Active' : 
-                 activeTab === 'inactive' ? 'Inactive' :
-                 activeTab === 'delegates' ? 'Delegates' : 'Member States'}
+                {activeTab === 'active' ? 'Current' : 
+                 activeTab === 'inactive' ? 'Former' : activeTab}
               </Badge>
             )}
             {selectedMemberState !== "all_states" && (

@@ -86,10 +86,8 @@ export function DelegateFilters({
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
               <TabsList>
                 <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="active">Active</TabsTrigger>
-                <TabsTrigger value="inactive">Inactive</TabsTrigger>
-                <TabsTrigger value="delegates">Delegates</TabsTrigger>
-                <TabsTrigger value="member_states">Member States</TabsTrigger>
+                <TabsTrigger value="active">Current</TabsTrigger>
+                <TabsTrigger value="inactive">Former</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
