@@ -15,8 +15,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { Plus, Search, Users, Building, UserCheck, Filter, Mail, ArrowUpDown } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Plus, Search, Users, Building, UserCheck, Filter, Mail, ArrowUpDown, Download, FileExcel } from "lucide-react"
 import { Delegate } from "@/types/delegate"
+import { exportDelegatesToExcel } from "@/utils/excelExport"
+import { useToast } from "@/hooks/use-toast"
 
 export default function Delegates() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -26,6 +29,9 @@ export default function Delegates() {
   const [sortBy, setSortBy] = useState<string>("newest")
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(12)
+  const [selectedDelegates, setSelectedDelegates] = useState<Set<string>>(new Set())
+  const [selectMode, setSelectMode] = useState(false)
+  const { toast } = useToast()
 
   // Mock data - simulating 400 delegates
   const generateMockDelegates = (): Delegate[] => {
@@ -127,6 +133,49 @@ export default function Delegates() {
     setCurrentPage(1)
   }
 
+  const handleSelectDelegate = (delegateId: string, checked: boolean) => {
+    const newSelected = new Set(selectedDelegates)
+    if (checked) {
+      newSelected.add(delegateId)
+    } else {
+      newSelected.delete(delegateId)
+    }
+    setSelectedDelegates(newSelected)
+  }
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedDelegates(new Set(currentDelegates.map(d => d.id)))
+    } else {
+      setSelectedDelegates(new Set())
+    }
+  }
+
+  const handleExportFiltered = () => {
+    exportDelegatesToExcel(filteredDelegates, 'filtered_delegates')
+    toast({
+      title: "Export Successful",
+      description: `Exported ${filteredDelegates.length} delegates to Excel file`,
+    })
+  }
+
+  const handleExportSelected = () => {
+    const selectedDelegateData = filteredDelegates.filter(d => selectedDelegates.has(d.id))
+    if (selectedDelegateData.length === 0) {
+      toast({
+        title: "No Selection",
+        description: "Please select delegates to export",
+        variant: "destructive"
+      })
+      return
+    }
+    exportDelegatesToExcel(selectedDelegateData, 'selected_delegates')
+    toast({
+      title: "Export Successful",
+      description: `Exported ${selectedDelegateData.length} selected delegates to Excel file`,
+    })
+  }
+
   const renderPaginationItems = () => {
     const items = []
     const maxVisiblePages = 5
@@ -176,6 +225,9 @@ export default function Delegates() {
     return items
   }
 
+  const allCurrentSelected = currentDelegates.length > 0 && currentDelegates.every(d => selectedDelegates.has(d.id))
+  const someCurrentSelected = currentDelegates.some(d => selectedDelegates.has(d.id))
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -183,10 +235,16 @@ export default function Delegates() {
           <h1 className="text-3xl font-bold text-gray-900">Delegates & Member States</h1>
           <p className="text-gray-600 mt-2">Manage membership assignments for contacts</p>
         </div>
-        <Button className="w-fit">
-          <Plus className="h-4 w-4 mr-2" />
-          Assign Membership
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setSelectMode(!selectMode)}>
+            <UserCheck className="h-4 w-4 mr-2" />
+            {selectMode ? 'Cancel Selection' : 'Select Mode'}
+          </Button>
+          <Button className="w-fit">
+            <Plus className="h-4 w-4 mr-2" />
+            Assign Membership
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -258,6 +316,31 @@ export default function Delegates() {
         </Card>
       </div>
 
+      {/* Export Actions */}
+      {(selectMode || selectedDelegates.size > 0) && (
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">
+                  {selectedDelegates.size} delegate{selectedDelegates.size !== 1 ? 's' : ''} selected
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={handleExportSelected} disabled={selectedDelegates.size === 0}>
+                  <FileExcel className="h-4 w-4 mr-2" />
+                  Export Selected ({selectedDelegates.size})
+                </Button>
+                <Button variant="outline" onClick={handleExportFiltered}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export All Filtered ({filteredDelegates.length})
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Search and Filters */}
       <Card>
         <CardContent className="p-4">
@@ -326,6 +409,14 @@ export default function Delegates() {
       {/* Results Header with Pagination Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-2">
+          {selectMode && (
+            <Checkbox
+              checked={allCurrentSelected}
+              onCheckedChange={handleSelectAll}
+              aria-label="Select all current page"
+              className="mr-2"
+            />
+          )}
           <h2 className="text-lg font-semibold">
             {filteredDelegates.length} member{filteredDelegates.length !== 1 ? 's' : ''}
           </h2>
@@ -382,12 +473,22 @@ export default function Delegates() {
       {/* Results Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentDelegates.map((delegate) => (
-          <DelegateCard
-            key={delegate.id}
-            delegate={delegate}
-            onEndMembership={(delegate) => console.log('End membership for:', delegate)}
-            onViewContact={(delegate) => console.log('View contact for:', delegate)}
-          />
+          <div key={delegate.id} className="relative">
+            {selectMode && (
+              <div className="absolute top-2 left-2 z-10">
+                <Checkbox
+                  checked={selectedDelegates.has(delegate.id)}
+                  onCheckedChange={(checked) => handleSelectDelegate(delegate.id, checked as boolean)}
+                  className="bg-white border-2"
+                />
+              </div>
+            )}
+            <DelegateCard
+              delegate={delegate}
+              onEndMembership={(delegate) => console.log('End membership for:', delegate)}
+              onViewContact={(delegate) => console.log('View contact for:', delegate)}
+            />
+          </div>
         ))}
       </div>
 
