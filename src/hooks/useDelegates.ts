@@ -1,4 +1,3 @@
-
 import { useState, useMemo } from "react"
 import { Delegate } from "@/types/delegate"
 
@@ -18,25 +17,33 @@ export function useDelegates() {
       'Sarah Johnson', 'Michael Chen', 'Emma Wilson', 'David Rodriguez', 'Lisa Anderson',
       'James Brown', 'Maria Garcia', 'Robert Taylor', 'Jennifer Davis', 'Christopher Wilson',
       'Amanda Thompson', 'Daniel Martinez', 'Michelle White', 'Kevin Clark', 'Laura Lewis',
-      'Steven Walker', 'Nicole Hall', 'Brian Allen', 'Stephanie Young', 'Gregory King'
+      'Steven Walker', 'Nicole Hall', 'Brian Allen', 'Stephanie Young', 'Gregory King',
+      'Anna Kowalski', 'Pierre Dubois', 'Hiroshi Tanaka', 'Sofia Rossi', 'Erik Andersen',
+      'Fatima Al-Zahra', 'Carlos Mendoza', 'Ingrid Larsson', 'Dmitri Volkov', 'Priya Sharma'
     ]
     const organizations = [
-      'Tech Solutions Inc', 'Global Corp', 'Innovation Labs', 'Digital Dynamics', 'Future Systems',
-      'Smart Technologies', 'Advanced Solutions', 'Elite Enterprises', 'Prime Industries', 'NextGen Corp'
+      'Ministry of Foreign Affairs', 'Department of International Trade', 'Embassy of Economic Relations',
+      'Consulate General', 'Trade Commission', 'Cultural Affairs Office', 'Economic Development Agency',
+      'International Relations Ministry', 'Diplomatic Mission', 'Commercial Attaché Office'
     ]
-    const memberStates = [
-      'California', 'New York', 'Texas', 'Florida', 'Illinois', 'Pennsylvania', 
-      'Ohio', 'Georgia', 'North Carolina', 'Michigan', 'New Jersey', 'Virginia'
+    const countries = [
+      'United States', 'Canada', 'United Kingdom', 'Germany', 'France', 'Italy', 'Spain', 'Netherlands',
+      'Sweden', 'Norway', 'Denmark', 'Finland', 'Poland', 'Czech Republic', 'Austria', 'Switzerland',
+      'Japan', 'South Korea', 'Australia', 'New Zealand', 'Brazil', 'Argentina', 'Mexico', 'Chile',
+      'India', 'Singapore', 'Thailand', 'Malaysia', 'South Africa', 'Egypt', 'Morocco', 'Turkey',
+      'Russia', 'Ukraine', 'Romania', 'Bulgaria', 'Greece', 'Portugal', 'Ireland', 'Belgium'
     ]
     const roles = [
-      'Senior Delegate', 'Lead Representative', 'Policy Advisor', 'Trade Representative',
-      'Economic Attaché', 'Cultural Liaison', 'Technical Advisor', 'Deputy Delegate'
+      'Ambassador', 'Deputy Ambassador', 'Trade Representative', 'Economic Attaché',
+      'Cultural Attaché', 'Commercial Counselor', 'Consul General', 'First Secretary',
+      'Second Secretary', 'Trade Commissioner', 'Economic Advisor', 'Diplomatic Attaché'
     ]
 
     for (let i = 1; i <= 400; i++) {
       const isOrganization = Math.random() > 0.7
       const isActive = Math.random() > 0.2
       const membershipType = isOrganization ? 'member_state' : 'delegate'
+      const country = countries[Math.floor(Math.random() * countries.length)]
       const baseEmail = isOrganization 
         ? organizations[Math.floor(Math.random() * organizations.length)].toLowerCase().replace(/\s+/g, '') + Math.floor(i/10)
         : names[Math.floor(Math.random() * names.length)].toLowerCase().replace(/\s+/g, '') + Math.floor(i/20)
@@ -45,25 +52,25 @@ export function useDelegates() {
         id: i.toString(),
         contactId: i.toString(),
         contactName: isOrganization 
-          ? organizations[Math.floor(Math.random() * organizations.length)] + ` ${Math.floor(i/10)}`
-          : names[Math.floor(Math.random() * names.length)] + ` ${Math.floor(i/20)}`,
+          ? organizations[Math.floor(Math.random() * organizations.length)] + ` - ${country}`
+          : names[Math.floor(Math.random() * names.length)],
         contactType: isOrganization ? 'organization' : 'individual',
         startDate: new Date(2020 + Math.floor(Math.random() * 5), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
         endDate: !isActive ? new Date(2023 + Math.floor(Math.random() * 2), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0] : undefined,
         isActive,
         membershipType,
-        memberState: membershipType === 'delegate' ? memberStates[Math.floor(Math.random() * memberStates.length)] : undefined,
+        memberState: country, // Now represents the country the delegate represents
         isNewsletterSubscribed: Math.random() > 0.4,
         role: membershipType === 'delegate' ? roles[Math.floor(Math.random() * roles.length)] : undefined,
         emails: [
-          `${baseEmail}@example.com`,
-          ...(Math.random() > 0.6 ? [`${baseEmail}.alt@company.com`] : [])
+          `${baseEmail}@${country.toLowerCase().replace(/\s+/g, '')}.gov`,
+          ...(Math.random() > 0.6 ? [`${baseEmail}.official@embassy.org`] : [])
         ],
         phones: [
-          `+1 (${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
-          ...(Math.random() > 0.7 ? [`+1 (${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`] : [])
+          `+${Math.floor(Math.random() * 999) + 1} (${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
+          ...(Math.random() > 0.7 ? [`+${Math.floor(Math.random() * 999) + 1} (${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`] : [])
         ],
-        notes: Math.random() > 0.5 ? `Sample note for delegate ${i}` : undefined
+        notes: Math.random() > 0.5 ? `Delegate representing ${country}. ${Math.random() > 0.5 ? 'Speaks multiple languages.' : 'Focus on trade relations.'}` : undefined
       })
     }
     
@@ -75,7 +82,7 @@ export function useDelegates() {
   const memberStates = useMemo(() => {
     return Array.from(new Set(
       delegates
-        .filter(d => d.membershipType === 'delegate' && d.memberState)
+        .filter(d => d.memberState)
         .map(d => d.memberState!)
     )).sort()
   }, [delegates])
