@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import { DelegateCard } from "@/components/DelegateCard"
 import { Button } from "@/components/ui/button"
@@ -16,12 +15,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { Plus, Search, Users, Building, UserCheck } from "lucide-react"
+import { Plus, Search, Users, Building, UserCheck, Filter } from "lucide-react"
 import { Delegate } from "@/types/delegate"
 
 export default function Delegates() {
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("all")
+  const [selectedMemberState, setSelectedMemberState] = useState<string>("")
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(12)
 
@@ -37,6 +37,10 @@ export default function Delegates() {
     const organizations = [
       'Tech Solutions Inc', 'Global Corp', 'Innovation Labs', 'Digital Dynamics', 'Future Systems',
       'Smart Technologies', 'Advanced Solutions', 'Elite Enterprises', 'Prime Industries', 'NextGen Corp'
+    ]
+    const memberStates = [
+      'California', 'New York', 'Texas', 'Florida', 'Illinois', 'Pennsylvania', 
+      'Ohio', 'Georgia', 'North Carolina', 'Michigan', 'New Jersey', 'Virginia'
     ]
 
     for (let i = 1; i <= 400; i++) {
@@ -54,7 +58,8 @@ export default function Delegates() {
         startDate: new Date(2020 + Math.floor(Math.random() * 5), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
         endDate: !isActive ? new Date(2023 + Math.floor(Math.random() * 2), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0] : undefined,
         isActive,
-        membershipType
+        membershipType,
+        memberState: membershipType === 'delegate' ? memberStates[Math.floor(Math.random() * memberStates.length)] : undefined
       })
     }
     
@@ -63,6 +68,13 @@ export default function Delegates() {
 
   const delegates = generateMockDelegates()
 
+  // Get unique member states for filter
+  const memberStates = Array.from(new Set(
+    delegates
+      .filter(d => d.membershipType === 'delegate' && d.memberState)
+      .map(d => d.memberState!)
+  )).sort()
+
   const filteredDelegates = delegates.filter(delegate => {
     const matchesSearch = delegate.contactName.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesTab = activeTab === 'all' || 
@@ -70,7 +82,8 @@ export default function Delegates() {
                       (activeTab === 'inactive' && !delegate.isActive) ||
                       (activeTab === 'delegates' && delegate.membershipType === 'delegate') ||
                       (activeTab === 'member_states' && delegate.membershipType === 'member_state')
-    return matchesSearch && matchesTab
+    const matchesMemberState = !selectedMemberState || delegate.memberState === selectedMemberState
+    return matchesSearch && matchesTab && matchesMemberState
   })
 
   const totalPages = Math.ceil(filteredDelegates.length / pageSize)
@@ -222,15 +235,31 @@ export default function Delegates() {
                 className="pl-10"
               />
             </div>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
-              <TabsList>
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="active">Active</TabsTrigger>
-                <TabsTrigger value="inactive">Inactive</TabsTrigger>
-                <TabsTrigger value="delegates">Delegates</TabsTrigger>
-                <TabsTrigger value="member_states">Member States</TabsTrigger>
-              </TabsList>
-            </Tabs>
+            <div className="flex gap-2">
+              <Select value={selectedMemberState} onValueChange={setSelectedMemberState}>
+                <SelectTrigger className="w-[200px]">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Filter by Member State" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Member States</SelectItem>
+                  {memberStates.map((state) => (
+                    <SelectItem key={state} value={state}>
+                      {state}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
+                <TabsList>
+                  <TabsTrigger value="all">All</TabsTrigger>
+                  <TabsTrigger value="active">Active</TabsTrigger>
+                  <TabsTrigger value="inactive">Inactive</TabsTrigger>
+                  <TabsTrigger value="delegates">Delegates</TabsTrigger>
+                  <TabsTrigger value="member_states">Member States</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -241,12 +270,21 @@ export default function Delegates() {
           <h2 className="text-lg font-semibold">
             {filteredDelegates.length} member{filteredDelegates.length !== 1 ? 's' : ''}
           </h2>
-          {activeTab !== 'all' && (
-            <Badge variant="secondary">
-              {activeTab === 'active' ? 'Active' : 
-               activeTab === 'inactive' ? 'Inactive' :
-               activeTab === 'delegates' ? 'Delegates' : 'Member States'}
-            </Badge>
+          {(activeTab !== 'all' || selectedMemberState) && (
+            <div className="flex gap-2">
+              {activeTab !== 'all' && (
+                <Badge variant="secondary">
+                  {activeTab === 'active' ? 'Active' : 
+                   activeTab === 'inactive' ? 'Inactive' :
+                   activeTab === 'delegates' ? 'Delegates' : 'Member States'}
+                </Badge>
+              )}
+              {selectedMemberState && (
+                <Badge variant="outline">
+                  {selectedMemberState}
+                </Badge>
+              )}
+            </div>
           )}
           <span className="text-sm text-gray-500">
             (Page {currentPage} of {totalPages})
@@ -313,7 +351,7 @@ export default function Delegates() {
             <UserCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No members found</h3>
             <p className="text-gray-600 mb-4">
-              {searchTerm
+              {searchTerm || selectedMemberState
                 ? "Try adjusting your search terms or filters"
                 : "Get started by assigning membership to contacts"}
             </p>

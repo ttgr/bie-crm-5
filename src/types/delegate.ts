@@ -8,4 +8,5 @@ export interface Delegate {
   endDate?: string
   isActive: boolean
   membershipType: 'delegate' | 'member_state'
+  memberState?: string // Added member state for delegates
 }
