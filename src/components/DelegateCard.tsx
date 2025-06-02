@@ -1,9 +1,10 @@
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Textarea } from "@/components/ui/textarea"
-import { Building, Calendar, CalendarOff, MapPin, Mail, Phone, FileText, Bell, BellOff, Languages } from "lucide-react"
+import { Building, Calendar, CalendarOff, MapPin, Mail, Phone, FileText, Bell, BellOff, Globe } from "lucide-react"
 import { Delegate } from "@/types/delegate"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
@@ -37,6 +38,27 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
     // In a real app, this would save to the backend
     console.log('Saving notes:', notes, 'for delegate:', delegate.id)
     setIsEditingNotes(false)
+  }
+
+  const getLanguageIcon = (language: 'English' | 'French') => {
+    if (language === 'French') {
+      return (
+        <div className="flex items-center gap-1 text-sm text-gray-600" title="French">
+          <div className="w-4 h-3 flex">
+            <div className="w-1/3 bg-blue-600 rounded-l"></div>
+            <div className="w-1/3 bg-white"></div>
+            <div className="w-1/3 bg-red-600 rounded-r"></div>
+          </div>
+          <span className="text-xs">FR</span>
+        </div>
+      )
+    }
+    return (
+      <div className="flex items-center gap-1 text-sm text-gray-600" title="English">
+        <Globe className="h-3 w-3" />
+        <span className="text-xs">EN</span>
+      </div>
+    )
   }
 
   return (
@@ -82,11 +104,8 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
           </div>
         )}
 
-        {/* Language Preference */}
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Languages className="h-3 w-3" />
-          <span>Language: {delegate.language}</span>
-        </div>
+        {/* Language Preference with Icon */}
+        {getLanguageIcon(delegate.language)}
 
         {/* Dates */}
         <div className="flex items-center gap-2 text-sm text-gray-600">
