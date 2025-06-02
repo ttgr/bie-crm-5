@@ -20,8 +20,7 @@ interface NotesModalProps {
 export function NotesModal({ isOpen, onClose, delegateName, notes, onAddNote }: NotesModalProps) {
   const [newNoteText, setNewNoteText] = useState("")
   
-  // This would typically come from your authentication context/hook
-  const currentUser = "John Smith" // Placeholder for current CRM user
+
 
   const handleAddNote = () => {
     if (newNoteText.trim()) {
@@ -52,11 +51,6 @@ export function NotesModal({ isOpen, onClose, delegateName, notes, onAddNote }: 
         </DialogHeader>
         
         <div className="space-y-4">
-          {/* Current user indicator */}
-          <div className="flex items-center gap-2 text-sm text-gray-600 bg-blue-50 p-2 rounded-lg">
-            <User className="h-4 w-4" />
-            <span>Logged in as: <strong>{currentUser}</strong></span>
-          </div>
 
           {/* Add new note section */}
           <div className="space-y-2">
