@@ -1,3 +1,4 @@
+
 import { useState } from "react"
 import { DelegateCard } from "@/components/DelegateCard"
 import { Button } from "@/components/ui/button"
@@ -12,14 +13,14 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Plus, UserCheck } from "lucide-react"
+import { Plus, Building } from "lucide-react"
 import { useDelegates } from "@/hooks/useDelegates"
 import { DelegateStats } from "@/components/delegates/DelegateStats"
 import { DelegateExportActions } from "@/components/delegates/DelegateExportActions"
 import { DelegateFilters } from "@/components/delegates/DelegateFilters"
 import { DelegateResultsHeader } from "@/components/delegates/DelegateResultsHeader"
 
-export default function Delegates() {
+export default function MemberStates() {
   const {
     filteredDelegates,
     currentDelegates,
@@ -42,9 +43,9 @@ export default function Delegates() {
     setSortBy
   } = useDelegates()
 
-  // Filter to only show delegates
-  const delegatesOnly = filteredDelegates.filter(d => d.membershipType === 'delegate')
-  const currentDelegatesOnly = currentDelegates.filter(d => d.membershipType === 'delegate')
+  // Filter to only show member states
+  const memberStatesDelegates = filteredDelegates.filter(d => d.membershipType === 'member_state')
+  const currentMemberStates = currentDelegates.filter(d => d.membershipType === 'member_state')
 
   const [selectedDelegates, setSelectedDelegates] = useState<Set<string>>(new Set())
   const [selectMode, setSelectMode] = useState(false)
@@ -61,7 +62,7 @@ export default function Delegates() {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedDelegates(new Set(currentDelegatesOnly.map(d => d.id)))
+      setSelectedDelegates(new Set(currentMemberStates.map(d => d.id)))
     } else {
       setSelectedDelegates(new Set())
     }
@@ -116,36 +117,36 @@ export default function Delegates() {
     return items
   }
 
-  const allCurrentSelected = currentDelegatesOnly.length > 0 && currentDelegatesOnly.every(d => selectedDelegates.has(d.id))
+  const allCurrentSelected = currentMemberStates.length > 0 && currentMemberStates.every(d => selectedDelegates.has(d.id))
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Delegates</h1>
-          <p className="text-gray-600 mt-2">Manage individual delegate memberships</p>
+          <h1 className="text-3xl font-bold text-gray-900">Member States</h1>
+          <p className="text-gray-600 mt-2">Manage organizational member states</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setSelectMode(!selectMode)}>
-            <UserCheck className="h-4 w-4 mr-2" />
+            <Building className="h-4 w-4 mr-2" />
             {selectMode ? 'Cancel Selection' : 'Select Mode'}
           </Button>
           <Button className="w-fit">
             <Plus className="h-4 w-4 mr-2" />
-            Assign Delegate
+            Add Member State
           </Button>
         </div>
       </div>
 
       <DelegateStats stats={{
         ...stats,
-        activeMemberStates: 0,
-        totalActive: stats.activeDelegates
+        activeDelegates: stats.activeMemberStates,
+        totalActive: stats.activeMemberStates
       }} />
 
       <DelegateExportActions 
         selectedDelegates={selectedDelegates}
-        filteredDelegates={delegatesOnly}
+        filteredDelegates={memberStatesDelegates}
         selectMode={selectMode}
       />
 
@@ -167,7 +168,7 @@ export default function Delegates() {
         selectMode={selectMode}
         allCurrentSelected={allCurrentSelected}
         handleSelectAll={handleSelectAll}
-        filteredDelegatesLength={delegatesOnly.length}
+        filteredDelegatesLength={memberStatesDelegates.length}
         currentPage={currentPage}
         totalPages={totalPages}
         activeTab={activeTab}
@@ -178,9 +179,8 @@ export default function Delegates() {
         handlePageSizeChange={handlePageSizeChange}
       />
 
-      {/* Results Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {currentDelegatesOnly.map((delegate) => (
+        {currentMemberStates.map((delegate) => (
           <div key={delegate.id} className="relative">
             {selectMode && (
               <div className="absolute top-2 left-2 z-10">
@@ -200,7 +200,6 @@ export default function Delegates() {
         ))}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center">
           <Pagination>
@@ -225,19 +224,19 @@ export default function Delegates() {
         </div>
       )}
 
-      {delegatesOnly.length === 0 && (
+      {memberStatesDelegates.length === 0 && (
         <Card className="text-center py-12">
           <CardContent>
-            <UserCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No delegates found</h3>
+            <Building className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No member states found</h3>
             <p className="text-gray-600 mb-4">
               {searchTerm || selectedMemberState || selectedNewsletterStatus
                 ? "Try adjusting your search terms or filters"
-                : "Get started by assigning delegate memberships"}
+                : "Get started by adding organizational member states"}
             </p>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              Assign Delegate
+              Add Member State
             </Button>
           </CardContent>
         </Card>
