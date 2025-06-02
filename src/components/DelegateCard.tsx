@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -8,6 +7,7 @@ import { Delegate, DelegateNote } from "@/types/delegate"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { NotesModal } from "@/components/NotesModal"
+import { DelegateProfile } from "@/components/DelegateProfile"
 
 interface DelegateCardProps {
   delegate: Delegate
@@ -18,6 +18,7 @@ interface DelegateCardProps {
 export function DelegateCard({ delegate, onEndMembership, onViewContact }: DelegateCardProps) {
   const navigate = useNavigate()
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false)
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   
   const initials = delegate.contactName
     .split(' ')
@@ -30,7 +31,7 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
   }
 
   const handleViewContact = () => {
-    navigate(`/contacts/${delegate.contactId}`)
+    setIsProfileModalOpen(true)
   }
 
   const handleAddNote = (noteText: string) => {
@@ -219,6 +220,12 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
         delegateName={delegate.contactName}
         notes={notes}
         onAddNote={handleAddNote}
+      />
+
+      <DelegateProfile
+        delegate={delegate}
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
       />
     </>
   )
