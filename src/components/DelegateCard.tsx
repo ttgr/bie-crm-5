@@ -76,7 +76,7 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
 
   return (
     <>
-      <Card className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1 flex flex-col h-full">
+      <Card className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1 flex flex-col h-full w-full">
         <CardHeader className="pb-3">
           <div className="flex items-start gap-3">
             <Avatar className="h-10 w-10">

@@ -183,7 +183,7 @@ export default function Delegates() {
       {/* Results Grid with equal height cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
         {currentDelegatesOnly.map((delegate) => (
-          <div key={delegate.id} className="relative flex">
+          <div key={delegate.id} className="relative flex w-full">
             {selectMode && (
               <div className="absolute top-2 left-2 z-10">
                 <Checkbox
