@@ -21,7 +21,7 @@ import { Delegate } from "@/types/delegate"
 export default function Delegates() {
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("all")
-  const [selectedMemberState, setSelectedMemberState] = useState<string>("")
+  const [selectedMemberState, setSelectedMemberState] = useState<string>("all_states")
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(12)
 
@@ -82,7 +82,7 @@ export default function Delegates() {
                       (activeTab === 'inactive' && !delegate.isActive) ||
                       (activeTab === 'delegates' && delegate.membershipType === 'delegate') ||
                       (activeTab === 'member_states' && delegate.membershipType === 'member_state')
-    const matchesMemberState = !selectedMemberState || delegate.memberState === selectedMemberState
+    const matchesMemberState = selectedMemberState === "all_states" || delegate.memberState === selectedMemberState
     return matchesSearch && matchesTab && matchesMemberState
   })
 
@@ -242,7 +242,7 @@ export default function Delegates() {
                   <SelectValue placeholder="Filter by Member State" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Member States</SelectItem>
+                  <SelectItem value="all_states">All Member States</SelectItem>
                   {memberStates.map((state) => (
                     <SelectItem key={state} value={state}>
                       {state}
@@ -270,7 +270,7 @@ export default function Delegates() {
           <h2 className="text-lg font-semibold">
             {filteredDelegates.length} member{filteredDelegates.length !== 1 ? 's' : ''}
           </h2>
-          {(activeTab !== 'all' || selectedMemberState) && (
+          {(activeTab !== 'all' || selectedMemberState !== "all_states") && (
             <div className="flex gap-2">
               {activeTab !== 'all' && (
                 <Badge variant="secondary">
@@ -279,7 +279,7 @@ export default function Delegates() {
                    activeTab === 'delegates' ? 'Delegates' : 'Member States'}
                 </Badge>
               )}
-              {selectedMemberState && (
+              {selectedMemberState !== "all_states" && (
                 <Badge variant="outline">
                   {selectedMemberState}
                 </Badge>
