@@ -1,11 +1,8 @@
+
 import { useState } from "react"
 import { DelegateCard } from "@/components/DelegateCard"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent } from "@/components/ui/card"
 import { 
   Pagination,
   PaginationContent,
@@ -16,122 +13,38 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Plus, Search, Users, Building, UserCheck, Filter, Mail, ArrowUpDown, Download, FileSpreadsheet } from "lucide-react"
-import { Delegate } from "@/types/delegate"
-import { exportDelegatesToExcel } from "@/utils/excelExport"
-import { useToast } from "@/hooks/use-toast"
+import { Plus, UserCheck } from "lucide-react"
+import { useDelegates } from "@/hooks/useDelegates"
+import { DelegateStats } from "@/components/delegates/DelegateStats"
+import { DelegateExportActions } from "@/components/delegates/DelegateExportActions"
+import { DelegateFilters } from "@/components/delegates/DelegateFilters"
+import { DelegateResultsHeader } from "@/components/delegates/DelegateResultsHeader"
 
 export default function Delegates() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [activeTab, setActiveTab] = useState("all")
-  const [selectedMemberState, setSelectedMemberState] = useState<string>("all_states")
-  const [selectedNewsletterStatus, setSelectedNewsletterStatus] = useState<string>("all_newsletter")
-  const [sortBy, setSortBy] = useState<string>("newest")
-  const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(12)
+  const {
+    filteredDelegates,
+    currentDelegates,
+    memberStates,
+    stats,
+    currentPage,
+    totalPages,
+    pageSize,
+    handlePageChange,
+    handlePageSizeChange,
+    searchTerm,
+    setSearchTerm,
+    activeTab,
+    setActiveTab,
+    selectedMemberState,
+    setSelectedMemberState,
+    selectedNewsletterStatus,
+    setSelectedNewsletterStatus,
+    sortBy,
+    setSortBy
+  } = useDelegates()
+
   const [selectedDelegates, setSelectedDelegates] = useState<Set<string>>(new Set())
   const [selectMode, setSelectMode] = useState(false)
-  const { toast } = useToast()
-
-  // Mock data - simulating 400 delegates
-  const generateMockDelegates = (): Delegate[] => {
-    const delegates: Delegate[] = []
-    const names = [
-      'Sarah Johnson', 'Michael Chen', 'Emma Wilson', 'David Rodriguez', 'Lisa Anderson',
-      'James Brown', 'Maria Garcia', 'Robert Taylor', 'Jennifer Davis', 'Christopher Wilson',
-      'Amanda Thompson', 'Daniel Martinez', 'Michelle White', 'Kevin Clark', 'Laura Lewis',
-      'Steven Walker', 'Nicole Hall', 'Brian Allen', 'Stephanie Young', 'Gregory King'
-    ]
-    const organizations = [
-      'Tech Solutions Inc', 'Global Corp', 'Innovation Labs', 'Digital Dynamics', 'Future Systems',
-      'Smart Technologies', 'Advanced Solutions', 'Elite Enterprises', 'Prime Industries', 'NextGen Corp'
-    ]
-    const memberStates = [
-      'California', 'New York', 'Texas', 'Florida', 'Illinois', 'Pennsylvania', 
-      'Ohio', 'Georgia', 'North Carolina', 'Michigan', 'New Jersey', 'Virginia'
-    ]
-
-    for (let i = 1; i <= 400; i++) {
-      const isOrganization = Math.random() > 0.7
-      const isActive = Math.random() > 0.2
-      const membershipType = isOrganization ? 'member_state' : 'delegate'
-      
-      delegates.push({
-        id: i.toString(),
-        contactId: i.toString(),
-        contactName: isOrganization 
-          ? organizations[Math.floor(Math.random() * organizations.length)] + ` ${Math.floor(i/10)}`
-          : names[Math.floor(Math.random() * names.length)] + ` ${Math.floor(i/20)}`,
-        contactType: isOrganization ? 'organization' : 'individual',
-        startDate: new Date(2020 + Math.floor(Math.random() * 5), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
-        endDate: !isActive ? new Date(2023 + Math.floor(Math.random() * 2), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0] : undefined,
-        isActive,
-        membershipType,
-        memberState: membershipType === 'delegate' ? memberStates[Math.floor(Math.random() * memberStates.length)] : undefined,
-        isNewsletterSubscribed: Math.random() > 0.4 // Random newsletter subscription status
-      })
-    }
-    
-    return delegates.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
-  }
-
-  const delegates = generateMockDelegates()
-
-  // Get unique member states for filter
-  const memberStates = Array.from(new Set(
-    delegates
-      .filter(d => d.membershipType === 'delegate' && d.memberState)
-      .map(d => d.memberState!)
-  )).sort()
-
-  const filteredDelegates = delegates.filter(delegate => {
-    const matchesSearch = delegate.contactName.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesTab = activeTab === 'all' || 
-                      (activeTab === 'active' && delegate.isActive) ||
-                      (activeTab === 'inactive' && !delegate.isActive) ||
-                      (activeTab === 'delegates' && delegate.membershipType === 'delegate') ||
-                      (activeTab === 'member_states' && delegate.membershipType === 'member_state')
-    const matchesMemberState = selectedMemberState === "all_states" || delegate.memberState === selectedMemberState
-    const matchesNewsletter = selectedNewsletterStatus === "all_newsletter" || 
-                              (selectedNewsletterStatus === "subscribed" && delegate.isNewsletterSubscribed) ||
-                              (selectedNewsletterStatus === "not_subscribed" && !delegate.isNewsletterSubscribed)
-    return matchesSearch && matchesTab && matchesMemberState && matchesNewsletter
-  }).sort((a, b) => {
-    const dateA = new Date(a.startDate).getTime()
-    const dateB = new Date(b.startDate).getTime()
-    
-    switch (sortBy) {
-      case "newest":
-        return dateB - dateA // Newest first
-      case "oldest":
-        return dateA - dateB // Oldest first
-      case "name_asc":
-        return a.contactName.localeCompare(b.contactName)
-      case "name_desc":
-        return b.contactName.localeCompare(a.contactName)
-      default:
-        return dateB - dateA
-    }
-  })
-
-  const totalPages = Math.ceil(filteredDelegates.length / pageSize)
-  const startIndex = (currentPage - 1) * pageSize
-  const endIndex = startIndex + pageSize
-  const currentDelegates = filteredDelegates.slice(startIndex, endIndex)
-
-  const activeDelegates = delegates.filter(d => d.isActive && d.membershipType === 'delegate')
-  const activeMemberStates = delegates.filter(d => d.isActive && d.membershipType === 'member_state')
-  const newsletterSubscribers = delegates.filter(d => d.isNewsletterSubscribed)
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const handlePageSizeChange = (size: string) => {
-    setPageSize(parseInt(size))
-    setCurrentPage(1)
-  }
 
   const handleSelectDelegate = (delegateId: string, checked: boolean) => {
     const newSelected = new Set(selectedDelegates)
@@ -149,31 +62,6 @@ export default function Delegates() {
     } else {
       setSelectedDelegates(new Set())
     }
-  }
-
-  const handleExportFiltered = () => {
-    exportDelegatesToExcel(filteredDelegates, 'filtered_delegates')
-    toast({
-      title: "Export Successful",
-      description: `Exported ${filteredDelegates.length} delegates to Excel file`,
-    })
-  }
-
-  const handleExportSelected = () => {
-    const selectedDelegateData = filteredDelegates.filter(d => selectedDelegates.has(d.id))
-    if (selectedDelegateData.length === 0) {
-      toast({
-        title: "No Selection",
-        description: "Please select delegates to export",
-        variant: "destructive"
-      })
-      return
-    }
-    exportDelegatesToExcel(selectedDelegateData, 'selected_delegates')
-    toast({
-      title: "Export Successful",
-      description: `Exported ${selectedDelegateData.length} selected delegates to Excel file`,
-    })
   }
 
   const renderPaginationItems = () => {
@@ -226,7 +114,6 @@ export default function Delegates() {
   }
 
   const allCurrentSelected = currentDelegates.length > 0 && currentDelegates.every(d => selectedDelegates.has(d.id))
-  const someCurrentSelected = currentDelegates.some(d => selectedDelegates.has(d.id))
 
   return (
     <div className="space-y-6">
@@ -247,228 +134,42 @@ export default function Delegates() {
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <UserCheck className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Active Delegates</p>
-                <p className="text-2xl font-bold">{activeDelegates.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Building className="h-5 w-5 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Member States</p>
-                <p className="text-2xl font-bold">{activeMemberStates.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Users className="h-5 w-5 text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Total Active</p>
-                <p className="text-2xl font-bold">{activeDelegates.length + activeMemberStates.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-orange-100 rounded-lg">
-                <Mail className="h-5 w-5 text-orange-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Newsletter Subscribers</p>
-                <p className="text-2xl font-bold">{newsletterSubscribers.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gray-100 rounded-lg">
-                <Users className="h-5 w-5 text-gray-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Total Members</p>
-                <p className="text-2xl font-bold">{delegates.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <DelegateStats stats={stats} />
 
-      {/* Export Actions */}
-      {(selectMode || selectedDelegates.size > 0) && (
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">
-                  {selectedDelegates.size} delegate{selectedDelegates.size !== 1 ? 's' : ''} selected
-                </span>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleExportSelected} disabled={selectedDelegates.size === 0}>
-                  <FileSpreadsheet className="h-4 w-4 mr-2" />
-                  Export Selected ({selectedDelegates.size})
-                </Button>
-                <Button variant="outline" onClick={handleExportFiltered}>
-                  <Download className="h-4 w-4 mr-2" />
-                  Export All Filtered ({filteredDelegates.length})
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <DelegateExportActions 
+        selectedDelegates={selectedDelegates}
+        filteredDelegates={filteredDelegates}
+        selectMode={selectMode}
+      />
 
-      {/* Search and Filters */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="Search delegates..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <div className="flex gap-2">
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-[180px]">
-                  <ArrowUpDown className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="newest">Newest First</SelectItem>
-                  <SelectItem value="oldest">Oldest First</SelectItem>
-                  <SelectItem value="name_asc">Name A-Z</SelectItem>
-                  <SelectItem value="name_desc">Name Z-A</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={selectedMemberState} onValueChange={setSelectedMemberState}>
-                <SelectTrigger className="w-[200px]">
-                  <Filter className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Filter by Member State" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all_states">All Member States</SelectItem>
-                  {memberStates.map((state) => (
-                    <SelectItem key={state} value={state}>
-                      {state}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={selectedNewsletterStatus} onValueChange={setSelectedNewsletterStatus}>
-                <SelectTrigger className="w-[200px]">
-                  <Mail className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Newsletter Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all_newsletter">All Newsletter Status</SelectItem>
-                  <SelectItem value="subscribed">Subscribed</SelectItem>
-                  <SelectItem value="not_subscribed">Not Subscribed</SelectItem>
-                </SelectContent>
-              </Select>
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
-                <TabsList>
-                  <TabsTrigger value="all">All</TabsTrigger>
-                  <TabsTrigger value="active">Active</TabsTrigger>
-                  <TabsTrigger value="inactive">Inactive</TabsTrigger>
-                  <TabsTrigger value="delegates">Delegates</TabsTrigger>
-                  <TabsTrigger value="member_states">Member States</TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <DelegateFilters 
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        selectedMemberState={selectedMemberState}
+        setSelectedMemberState={setSelectedMemberState}
+        selectedNewsletterStatus={selectedNewsletterStatus}
+        setSelectedNewsletterStatus={setSelectedNewsletterStatus}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        memberStates={memberStates}
+      />
 
-      {/* Results Header with Pagination Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-2">
-          {selectMode && (
-            <Checkbox
-              checked={allCurrentSelected}
-              onCheckedChange={handleSelectAll}
-              aria-label="Select all current page"
-              className="mr-2"
-            />
-          )}
-          <h2 className="text-lg font-semibold">
-            {filteredDelegates.length} member{filteredDelegates.length !== 1 ? 's' : ''}
-          </h2>
-          {(activeTab !== 'all' || selectedMemberState !== "all_states" || selectedNewsletterStatus !== "all_newsletter" || sortBy !== "newest") && (
-            <div className="flex gap-2">
-              {activeTab !== 'all' && (
-                <Badge variant="secondary">
-                  {activeTab === 'active' ? 'Active' : 
-                   activeTab === 'inactive' ? 'Inactive' :
-                   activeTab === 'delegates' ? 'Delegates' : 'Member States'}
-                </Badge>
-              )}
-              {selectedMemberState !== "all_states" && (
-                <Badge variant="outline">
-                  {selectedMemberState}
-                </Badge>
-              )}
-              {selectedNewsletterStatus !== "all_newsletter" && (
-                <Badge variant="outline">
-                  {selectedNewsletterStatus === 'subscribed' ? 'Newsletter: Subscribed' : 'Newsletter: Not Subscribed'}
-                </Badge>
-              )}
-              {sortBy !== "newest" && (
-                <Badge variant="outline">
-                  Sort: {sortBy === "oldest" ? "Oldest First" : 
-                         sortBy === "name_asc" ? "Name A-Z" : 
-                         sortBy === "name_desc" ? "Name Z-A" : "Newest First"}
-                </Badge>
-              )}
-            </div>
-          )}
-          <span className="text-sm text-gray-500">
-            (Page {currentPage} of {totalPages})
-          </span>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">Show:</span>
-          <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
-            <SelectTrigger className="w-20">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="6">6</SelectItem>
-              <SelectItem value="12">12</SelectItem>
-              <SelectItem value="24">24</SelectItem>
-              <SelectItem value="48">48</SelectItem>
-            </SelectContent>
-          </Select>
-          <span className="text-sm text-gray-600">per page</span>
-        </div>
-      </div>
+      <DelegateResultsHeader 
+        selectMode={selectMode}
+        allCurrentSelected={allCurrentSelected}
+        handleSelectAll={handleSelectAll}
+        filteredDelegatesLength={filteredDelegates.length}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        activeTab={activeTab}
+        selectedMemberState={selectedMemberState}
+        selectedNewsletterStatus={selectedNewsletterStatus}
+        sortBy={sortBy}
+        pageSize={pageSize}
+        handlePageSizeChange={handlePageSizeChange}
+      />
 
       {/* Results Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
