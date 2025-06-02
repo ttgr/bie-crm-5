@@ -6,62 +6,62 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { 
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 import { Plus, Search, Users, Building, UserCheck } from "lucide-react"
 import { Delegate } from "@/types/delegate"
 
 export default function Delegates() {
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("all")
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(12)
 
-  // Mock data - in a real app, this would come from your backend
-  const delegates: Delegate[] = [
-    {
-      id: '1',
-      contactId: '1',
-      contactName: 'Sarah Johnson',
-      contactType: 'individual',
-      startDate: '2024-01-15',
-      isActive: true,
-      membershipType: 'delegate'
-    },
-    {
-      id: '2',
-      contactId: '2',
-      contactName: 'Tech Solutions Inc',
-      contactType: 'organization',
-      startDate: '2023-06-01',
-      isActive: true,
-      membershipType: 'member_state'
-    },
-    {
-      id: '3',
-      contactId: '3',
-      contactName: 'Michael Chen',
-      contactType: 'individual',
-      startDate: '2023-12-01',
-      endDate: '2024-11-30',
-      isActive: false,
-      membershipType: 'delegate'
-    },
-    {
-      id: '4',
-      contactId: '4',
-      contactName: 'Global Corp',
-      contactType: 'organization',
-      startDate: '2022-03-15',
-      isActive: true,
-      membershipType: 'member_state'
-    },
-    {
-      id: '5',
-      contactId: '5',
-      contactName: 'Emma Wilson',
-      contactType: 'individual',
-      startDate: '2024-03-01',
-      isActive: true,
-      membershipType: 'delegate'
+  // Mock data - simulating 400 delegates
+  const generateMockDelegates = (): Delegate[] => {
+    const delegates: Delegate[] = []
+    const names = [
+      'Sarah Johnson', 'Michael Chen', 'Emma Wilson', 'David Rodriguez', 'Lisa Anderson',
+      'James Brown', 'Maria Garcia', 'Robert Taylor', 'Jennifer Davis', 'Christopher Wilson',
+      'Amanda Thompson', 'Daniel Martinez', 'Michelle White', 'Kevin Clark', 'Laura Lewis',
+      'Steven Walker', 'Nicole Hall', 'Brian Allen', 'Stephanie Young', 'Gregory King'
+    ]
+    const organizations = [
+      'Tech Solutions Inc', 'Global Corp', 'Innovation Labs', 'Digital Dynamics', 'Future Systems',
+      'Smart Technologies', 'Advanced Solutions', 'Elite Enterprises', 'Prime Industries', 'NextGen Corp'
+    ]
+
+    for (let i = 1; i <= 400; i++) {
+      const isOrganization = Math.random() > 0.7
+      const isActive = Math.random() > 0.2
+      const membershipType = isOrganization ? 'member_state' : 'delegate'
+      
+      delegates.push({
+        id: i.toString(),
+        contactId: i.toString(),
+        contactName: isOrganization 
+          ? organizations[Math.floor(Math.random() * organizations.length)] + ` ${Math.floor(i/10)}`
+          : names[Math.floor(Math.random() * names.length)] + ` ${Math.floor(i/20)}`,
+        contactType: isOrganization ? 'organization' : 'individual',
+        startDate: new Date(2020 + Math.floor(Math.random() * 5), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
+        endDate: !isActive ? new Date(2023 + Math.floor(Math.random() * 2), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0] : undefined,
+        isActive,
+        membershipType
+      })
     }
-  ]
+    
+    return delegates.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
+  }
+
+  const delegates = generateMockDelegates()
 
   const filteredDelegates = delegates.filter(delegate => {
     const matchesSearch = delegate.contactName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -73,8 +73,72 @@ export default function Delegates() {
     return matchesSearch && matchesTab
   })
 
+  const totalPages = Math.ceil(filteredDelegates.length / pageSize)
+  const startIndex = (currentPage - 1) * pageSize
+  const endIndex = startIndex + pageSize
+  const currentDelegates = filteredDelegates.slice(startIndex, endIndex)
+
   const activeDelegates = delegates.filter(d => d.isActive && d.membershipType === 'delegate')
   const activeMemberStates = delegates.filter(d => d.isActive && d.membershipType === 'member_state')
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handlePageSizeChange = (size: string) => {
+    setPageSize(parseInt(size))
+    setCurrentPage(1)
+  }
+
+  const renderPaginationItems = () => {
+    const items = []
+    const maxVisiblePages = 5
+    
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2))
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1)
+    
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1)
+    }
+
+    if (startPage > 1) {
+      items.push(
+        <PaginationItem key="1">
+          <PaginationLink onClick={() => handlePageChange(1)}>1</PaginationLink>
+        </PaginationItem>
+      )
+      if (startPage > 2) {
+        items.push(<PaginationItem key="ellipsis1"><PaginationEllipsis /></PaginationItem>)
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      items.push(
+        <PaginationItem key={i}>
+          <PaginationLink 
+            onClick={() => handlePageChange(i)}
+            isActive={currentPage === i}
+          >
+            {i}
+          </PaginationLink>
+        </PaginationItem>
+      )
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        items.push(<PaginationItem key="ellipsis2"><PaginationEllipsis /></PaginationItem>)
+      }
+      items.push(
+        <PaginationItem key={totalPages}>
+          <PaginationLink onClick={() => handlePageChange(totalPages)}>{totalPages}</PaginationLink>
+        </PaginationItem>
+      )
+    }
+
+    return items
+  }
 
   return (
     <div className="space-y-6">
@@ -171,9 +235,9 @@ export default function Delegates() {
         </CardContent>
       </Card>
 
-      {/* Results */}
-      <div>
-        <div className="flex items-center gap-2 mb-4">
+      {/* Results Header with Pagination Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center gap-2">
           <h2 className="text-lg font-semibold">
             {filteredDelegates.length} member{filteredDelegates.length !== 1 ? 's' : ''}
           </h2>
@@ -184,37 +248,82 @@ export default function Delegates() {
                activeTab === 'delegates' ? 'Delegates' : 'Member States'}
             </Badge>
           )}
+          <span className="text-sm text-gray-500">
+            (Page {currentPage} of {totalPages})
+          </span>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredDelegates.map((delegate) => (
-            <DelegateCard
-              key={delegate.id}
-              delegate={delegate}
-              onEndMembership={(delegate) => console.log('End membership for:', delegate)}
-              onViewContact={(delegate) => console.log('View contact for:', delegate)}
-            />
-          ))}
+        
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600">Show:</span>
+          <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
+            <SelectTrigger className="w-20">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="6">6</SelectItem>
+              <SelectItem value="12">12</SelectItem>
+              <SelectItem value="24">24</SelectItem>
+              <SelectItem value="48">48</SelectItem>
+            </SelectContent>
+          </Select>
+          <span className="text-sm text-gray-600">per page</span>
         </div>
-
-        {filteredDelegates.length === 0 && (
-          <Card className="text-center py-12">
-            <CardContent>
-              <UserCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No members found</h3>
-              <p className="text-gray-600 mb-4">
-                {searchTerm
-                  ? "Try adjusting your search terms or filters"
-                  : "Get started by assigning membership to contacts"}
-              </p>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Assign Membership
-              </Button>
-            </CardContent>
-          </Card>
-        )}
       </div>
+
+      {/* Results Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {currentDelegates.map((delegate) => (
+          <DelegateCard
+            key={delegate.id}
+            delegate={delegate}
+            onEndMembership={(delegate) => console.log('End membership for:', delegate)}
+            onViewContact={(delegate) => console.log('View contact for:', delegate)}
+          />
+        ))}
+      </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+              
+              {renderPaginationItems()}
+              
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
+
+      {filteredDelegates.length === 0 && (
+        <Card className="text-center py-12">
+          <CardContent>
+            <UserCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No members found</h3>
+            <p className="text-gray-600 mb-4">
+              {searchTerm
+                ? "Try adjusting your search terms or filters"
+                : "Get started by assigning membership to contacts"}
+            </p>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Assign Membership
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
