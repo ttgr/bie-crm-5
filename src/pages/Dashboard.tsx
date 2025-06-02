@@ -1,4 +1,3 @@
-
 import { StatsCard } from "@/components/StatsCard"
 import { ContactCard, Contact } from "@/components/ContactCard"
 import { EventCard, Event } from "@/components/EventCard"
@@ -83,7 +82,9 @@ export default function Dashboard() {
       contactType: 'individual',
       startDate: '2024-11-15',
       isActive: true,
-      membershipType: 'delegate'
+      membershipType: 'delegate',
+      memberState: 'California',
+      isNewsletterSubscribed: true
     },
     {
       id: '2',
@@ -92,7 +93,8 @@ export default function Dashboard() {
       contactType: 'organization',
       startDate: '2024-11-10',
       isActive: true,
-      membershipType: 'member_state'
+      membershipType: 'member_state',
+      isNewsletterSubscribed: false
     },
     {
       id: '3',
@@ -101,7 +103,9 @@ export default function Dashboard() {
       contactType: 'individual',
       startDate: '2024-11-05',
       isActive: true,
-      membershipType: 'delegate'
+      membershipType: 'delegate',
+      memberState: 'New York',
+      isNewsletterSubscribed: true
     },
     {
       id: '4',
@@ -110,7 +114,8 @@ export default function Dashboard() {
       contactType: 'organization',
       startDate: '2024-11-01',
       isActive: true,
-      membershipType: 'member_state'
+      membershipType: 'member_state',
+      isNewsletterSubscribed: true
     },
     {
       id: '5',
@@ -119,7 +124,9 @@ export default function Dashboard() {
       contactType: 'individual',
       startDate: '2024-10-28',
       isActive: true,
-      membershipType: 'delegate'
+      membershipType: 'delegate',
+      memberState: 'Texas',
+      isNewsletterSubscribed: false
     },
     {
       id: '6',
@@ -128,7 +135,8 @@ export default function Dashboard() {
       contactType: 'organization',
       startDate: '2024-10-25',
       isActive: true,
-      membershipType: 'member_state'
+      membershipType: 'member_state',
+      isNewsletterSubscribed: true
     }
   ]
 
