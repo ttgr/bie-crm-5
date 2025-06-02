@@ -138,9 +138,10 @@ export default function Delegates() {
       </div>
 
       <DelegateStats stats={{
-        ...stats,
-        activeMemberStates: 0,
-        totalActive: stats.activeDelegates
+        activeDelegates: stats.activeDelegates,
+        totalActive: stats.activeDelegates,
+        newsletterSubscribers: stats.newsletterSubscribers,
+        totalMembers: stats.totalMembers
       }} />
 
       <DelegateExportActions 

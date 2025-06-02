@@ -1,11 +1,10 @@
 
 import { Card, CardContent } from "@/components/ui/card"
-import { UserCheck, Building, Users, Mail } from "lucide-react"
+import { UserCheck, Users, Mail } from "lucide-react"
 
 interface DelegateStatsProps {
   stats: {
     activeDelegates: number
-    activeMemberStates: number
     totalActive: number
     newsletterSubscribers: number
     totalMembers: number
@@ -14,7 +13,7 @@ interface DelegateStatsProps {
 
 export function DelegateStats({ stats }: DelegateStatsProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
       <Card>
         <CardContent className="p-4">
           <div className="flex items-center gap-3">
@@ -24,19 +23,6 @@ export function DelegateStats({ stats }: DelegateStatsProps) {
             <div>
               <p className="text-sm text-gray-600">Active Delegates</p>
               <p className="text-2xl font-bold">{stats.activeDelegates}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <Building className="h-5 w-5 text-purple-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Member States</p>
-              <p className="text-2xl font-bold">{stats.activeMemberStates}</p>
             </div>
           </div>
         </CardContent>
