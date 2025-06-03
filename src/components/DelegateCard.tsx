@@ -1,4 +1,5 @@
 
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -104,6 +105,7 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-gray-900 truncate">{delegate.contactName}</h3>
               <div className="flex flex-wrap gap-1 mt-1">
+                {getLanguageIcon(delegate.language)}
                 <Badge variant={delegate.membershipType === 'delegate' ? 'default' : 'secondary'} className="text-xs">
                   {delegate.membershipType === 'delegate' ? 'Delegate' : 'Member State'}
                 </Badge>
@@ -157,9 +159,6 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
               <span>{delegate.role}</span>
             </div>
           )}
-
-          {/* Language Preference with Icon */}
-          {getLanguageIcon(delegate.language)}
 
           {/* Dates - Start and End on same line */}
           <div className="flex items-center gap-2 text-sm text-gray-600">
