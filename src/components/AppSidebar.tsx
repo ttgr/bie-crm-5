@@ -1,6 +1,6 @@
-
-import { Calendar, Users, Home, Building, UserCheck } from "lucide-react"
+import { Calendar, Users, Home, Building, UserCheck, ChevronDown } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
+import { useState } from "react"
 import {
   Sidebar,
   SidebarContent,
@@ -10,22 +10,37 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 
 const mainItems = [
   { title: "Dashboard", url: "/", icon: Home },
   { title: "Contacts", url: "/contacts", icon: Users },
+  { title: "Events", url: "/events", icon: Calendar },
+]
+
+const membershipItems = [
   { title: "Delegates", url: "/delegates", icon: UserCheck },
   { title: "Member States", url: "/member-states", icon: Building },
-  { title: "Events", url: "/events", icon: Calendar },
 ]
 
 export function AppSidebar() {
   const { state } = useSidebar()
   const location = useLocation()
   const currentPath = location.pathname
+  
+  // Check if any membership route is active to keep the group open
+  const isMembershipActive = membershipItems.some(item => currentPath === item.url)
+  const [membershipOpen, setMembershipOpen] = useState(isMembershipActive)
 
   const isActive = (path: string) => currentPath === path
   const isExpanded = mainItems.some((item) => isActive(item.url))
@@ -70,6 +85,46 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              
+              {/* Membership section with sub-items */}
+              <Collapsible open={membershipOpen} onOpenChange={setMembershipOpen}>
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton className="w-full">
+                      <Users className="h-4 w-4" />
+                      {state !== "collapsed" && (
+                        <>
+                          <span>Membership</span>
+                          <ChevronDown className="ml-auto h-4 w-4 transition-transform duration-200" />
+                        </>
+                      )}
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {membershipItems.map((item) => (
+                        <SidebarMenuSubItem key={item.title}>
+                          <SidebarMenuSubButton asChild>
+                            <NavLink
+                              to={item.url}
+                              className={({ isActive }) =>
+                                `flex items-center gap-3 p-2 rounded-md transition-colors ${
+                                  isActive
+                                    ? "bg-primary text-primary-foreground"
+                                    : "hover:bg-muted"
+                                }`
+                              }
+                            >
+                              <item.icon className="h-4 w-4" />
+                              <span>{item.title}</span>
+                            </NavLink>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
