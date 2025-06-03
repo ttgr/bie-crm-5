@@ -3,7 +3,23 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Search, ArrowUpDown, Filter, Mail } from "lucide-react"
+import { Search, ArrowUpDown, Filter, Mail, Check, ChevronsUpDown } from "lucide-react"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
 
 interface DelegateFiltersProps {
   searchTerm: string
@@ -32,6 +48,21 @@ export function DelegateFilters({
   setActiveTab,
   memberStates
 }: DelegateFiltersProps) {
+  const [memberStateOpen, setMemberStateOpen] = useState(false)
+
+  // Function to normalize text for search (handles accented characters)
+  const normalizeText = (text: string) => {
+    return text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+  }
+
+  const getDisplayValue = (value: string) => {
+    if (value === "all_states") return "All Member States"
+    return value
+  }
+
   return (
     <Card>
       <CardContent className="p-4">
@@ -58,20 +89,71 @@ export function DelegateFilters({
                 <SelectItem value="name_desc">Name Z-A</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={selectedMemberState} onValueChange={setSelectedMemberState}>
-              <SelectTrigger className="w-[200px]">
-                <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="Filter by Member State" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all_states">All Member States</SelectItem>
-                {memberStates.map((state) => (
-                  <SelectItem key={state} value={state}>
-                    {state}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            
+            <Popover open={memberStateOpen} onOpenChange={setMemberStateOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={memberStateOpen}
+                  className="w-[200px] justify-between"
+                >
+                  <Filter className="h-4 w-4 mr-2" />
+                  {getDisplayValue(selectedMemberState)}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[200px] p-0">
+                <Command
+                  filter={(value, search) => {
+                    const normalizedValue = normalizeText(value)
+                    const normalizedSearch = normalizeText(search)
+                    return normalizedValue.includes(normalizedSearch) ? 1 : 0
+                  }}
+                >
+                  <CommandInput placeholder="Search member states..." />
+                  <CommandList>
+                    <CommandEmpty>No member state found.</CommandEmpty>
+                    <CommandGroup>
+                      <CommandItem
+                        value="all_states"
+                        onSelect={() => {
+                          setSelectedMemberState("all_states")
+                          setMemberStateOpen(false)
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            selectedMemberState === "all_states" ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        All Member States
+                      </CommandItem>
+                      {memberStates.map((state) => (
+                        <CommandItem
+                          key={state}
+                          value={state}
+                          onSelect={() => {
+                            setSelectedMemberState(state)
+                            setMemberStateOpen(false)
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              selectedMemberState === state ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                          {state}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+
             <Select value={selectedNewsletterStatus} onValueChange={setSelectedNewsletterStatus}>
               <SelectTrigger className="w-[200px]">
                 <Mail className="h-4 w-4 mr-2" />
