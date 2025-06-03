@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Search, ArrowUpDown, Filter, Mail, Check, ChevronsUpDown } from "lucide-react"
+import { Search, ArrowUpDown, Filter, Mail, Check, ChevronsUpDown, X } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -61,6 +61,14 @@ export function DelegateFilters({
   const getDisplayValue = (value: string) => {
     if (value === "all_states") return "All Member States"
     return value
+  }
+
+  const clearFilters = () => {
+    setSearchTerm("")
+    setSortBy("newest")
+    setSelectedMemberState("all_states")
+    setSelectedNewsletterStatus("all_newsletter")
+    setActiveTab("all")
   }
 
   return (
@@ -165,6 +173,12 @@ export function DelegateFilters({
                 <SelectItem value="not_subscribed">Not Subscribed</SelectItem>
               </SelectContent>
             </Select>
+
+            <Button variant="outline" onClick={clearFilters}>
+              <X className="h-4 w-4 mr-2" />
+              Clear Filters
+            </Button>
+
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
               <TabsList>
                 <TabsTrigger value="all">All</TabsTrigger>
