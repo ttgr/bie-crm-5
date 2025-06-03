@@ -144,17 +144,18 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
           {/* Language Preference with Icon */}
           {getLanguageIcon(delegate.language)}
 
-          {/* Dates */}
+          {/* Dates - Start and End on same line */}
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <Calendar className="h-3 w-3" />
             <span>Started: {formatDate(delegate.startDate)}</span>
+            {delegate.endDate && (
+              <>
+                <span className="mx-2">•</span>
+                <CalendarOff className="h-3 w-3" />
+                <span>Ended: {formatDate(delegate.endDate)}</span>
+              </>
+            )}
           </div>
-          {delegate.endDate && (
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <CalendarOff className="h-3 w-3" />
-              <span>Ended: {formatDate(delegate.endDate)}</span>
-            </div>
-          )}
 
           {/* Contact Information */}
           <div className="space-y-2">
