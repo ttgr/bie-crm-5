@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import { DelegateCard } from "@/components/DelegateCard"
 import { Button } from "@/components/ui/button"
@@ -49,6 +48,7 @@ export default function Delegates() {
 
   const [selectedDelegates, setSelectedDelegates] = useState<Set<string>>(new Set())
   const [selectMode, setSelectMode] = useState(false)
+  const [gridCols, setGridCols] = useState(4) // Default to 4 columns
 
   const handleSelectDelegate = (delegateId: string, checked: boolean) => {
     const newSelected = new Set(selectedDelegates)
@@ -65,6 +65,20 @@ export default function Delegates() {
       setSelectedDelegates(new Set(currentDelegatesOnly.map(d => d.id)))
     } else {
       setSelectedDelegates(new Set())
+    }
+  }
+
+  const getGridClasses = () => {
+    switch (gridCols) {
+      case 1:
+        return "grid-cols-1"
+      case 2:
+        return "grid-cols-1 sm:grid-cols-2"
+      case 3:
+        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+      case 4:
+      default:
+        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
     }
   }
 
@@ -182,10 +196,12 @@ export default function Delegates() {
         sortBy={sortBy}
         pageSize={pageSize}
         handlePageSizeChange={handlePageSizeChange}
+        gridCols={gridCols}
+        onGridColsChange={setGridCols}
       />
 
-      {/* Results Grid with responsive layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 auto-rows-fr">
+      {/* Results Grid with dynamic responsive layout */}
+      <div className={`grid ${getGridClasses()} gap-4 sm:gap-6 auto-rows-fr`}>
         {currentDelegatesOnly.map((delegate) => (
           <div key={delegate.id} className="relative flex w-full min-w-0">
             {selectMode && (
