@@ -5,6 +5,7 @@ import { Delegate } from "@/types/delegate"
 import { LanguageIcon } from "./LanguageIcon"
 import { NotesIndicator } from "./NotesIndicator"
 import { DocumentsIndicator } from "./DocumentsIndicator"
+import { NewsletterIndicator } from "./NewsletterIndicator"
 
 interface DelegateCardHeaderProps {
   delegate: Delegate
@@ -23,7 +24,7 @@ export function DelegateCardHeader({ delegate, onNotesClick, onDocumentsClick }:
           <h3 className="font-semibold text-lg leading-tight truncate">
             {delegate.contactName}
           </h3>
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex items-center gap-2 mt-1 flex-wrap">
             <Badge variant={delegate.isActive ? "default" : "secondary"} className="text-xs">
               {delegate.isActive ? "Active" : "Inactive"}
             </Badge>
@@ -31,6 +32,7 @@ export function DelegateCardHeader({ delegate, onNotesClick, onDocumentsClick }:
               {delegate.membershipType === 'delegate' ? 'Delegate' : 'Member State'}
             </Badge>
             <LanguageIcon language={delegate.language} />
+            <NewsletterIndicator isSubscribed={delegate.isNewsletterSubscribed} />
           </div>
         </div>
         <div className="flex items-center gap-1 ml-2">
