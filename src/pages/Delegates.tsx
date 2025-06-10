@@ -18,6 +18,8 @@ import { DelegateStats } from "@/components/delegates/DelegateStats"
 import { DelegateExportActions } from "@/components/delegates/DelegateExportActions"
 import { DelegateFilters } from "@/components/delegates/DelegateFilters"
 import { DelegateResultsHeader } from "@/components/delegates/DelegateResultsHeader"
+import { DocumentAttachmentButton } from "@/components/documents/DocumentAttachmentButton"
+import { DelegateDocument } from "@/types/delegate"
 
 export default function Delegates() {
   const {
@@ -66,6 +68,20 @@ export default function Delegates() {
     } else {
       setSelectedDelegates(new Set())
     }
+  }
+
+  const handleAttachDocument = (document: Omit<DelegateDocument, 'id' | 'createdAt' | 'fileUrl'>, file: File) => {
+    // In a real implementation, this would:
+    // 1. Upload the file to a storage service
+    // 2. Save the document metadata to the database
+    // 3. Update the delegates with the new document
+    console.log('Attaching document:', document, 'File:', file)
+    
+    // For now, just log the action
+    console.log(`Document "${document.subject}" attached to ${document.attachedDelegates.length} delegates`)
+    
+    // In a real app, you would update the delegates state here
+    // and refresh the data from the backend
   }
 
   const getGridClasses = () => {
@@ -273,6 +289,12 @@ export default function Delegates() {
           </CardContent>
         </Card>
       )}
+
+      {/* Document Attachment Button */}
+      <DocumentAttachmentButton
+        delegates={delegatesOnly}
+        onAttachDocument={handleAttachDocument}
+      />
     </div>
   )
 }
