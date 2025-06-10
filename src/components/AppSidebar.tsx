@@ -1,4 +1,5 @@
-import { Users, Home, Building, UserCheck, ChevronDown } from "lucide-react"
+
+import { Users, Home, Building, UserCheck, ChevronDown, BarChart3 } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
 import { useState } from "react"
 import {
@@ -23,7 +24,7 @@ import {
 } from "@/components/ui/collapsible"
 
 const membershipItems = [
-  { title: "Dashboard", url: "/", icon: Home },
+  { title: "Dashboard", url: "/", icon: BarChart3 },
   { title: "Delegates", url: "/delegates", icon: UserCheck },
   { title: "Member States", url: "/member-states", icon: Building },
 ]
@@ -53,6 +54,31 @@ export function AppSidebar() {
       <SidebarTrigger className="m-2 self-end" />
 
       <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {/* Main Dashboard outside membership */}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink
+                    to="/dashboard"
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 p-2 rounded-md transition-colors ${
+                        isActive
+                          ? "bg-primary text-primary-foreground"
+                          : "hover:bg-muted"
+                      }`
+                    }
+                  >
+                    <Home className="h-4 w-4" />
+                    <span>Dashboard</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
         <SidebarGroup>
           <SidebarGroupLabel>Membership Management</SidebarGroupLabel>
           <SidebarGroupContent>
