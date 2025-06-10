@@ -1,10 +1,13 @@
+
 import { StatsCard } from "@/components/StatsCard"
 import { ContactCard, Contact } from "@/components/ContactCard"
 import { EventCard, Event } from "@/components/EventCard"
 import { DelegateCard } from "@/components/DelegateCard"
-import { Users, Calendar, Building, UserCheck } from "lucide-react"
+import { Users, Calendar, Building, UserCheck, FileText, Download } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Delegate } from "@/types/delegate"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Delegate, DelegateDocument } from "@/types/delegate"
 
 export default function Dashboard() {
   // Mock data - in a real app, this would come from your backend
@@ -92,12 +95,34 @@ export default function Dashboard() {
         {
           id: '1',
           text: 'Excellent communication skills',
-          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() // 2 days ago
+          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
         },
         {
           id: '2',
           text: 'Very responsive to emails',
-          createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() // 5 days ago
+          createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+        }
+      ],
+      documents: [
+        {
+          id: 'doc1',
+          subject: 'Q4 Policy Review Meeting',
+          type: 'Meeting (In presence)',
+          dateTime: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          fileName: 'Q4-Policy-Review.pdf',
+          fileUrl: '/documents/Q4-Policy-Review.pdf',
+          attachedDelegates: ['1', '2'],
+          createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'doc2',
+          subject: 'Annual Budget Report 2024',
+          type: 'Report',
+          dateTime: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+          fileName: 'Annual-Budget-2024.pdf',
+          fileUrl: '/documents/Annual-Budget-2024.pdf',
+          attachedDelegates: ['1'],
+          createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
         }
       ],
       language: 'English'
@@ -113,6 +138,18 @@ export default function Dashboard() {
       isNewsletterSubscribed: false,
       emails: ['contact@globalcorp.com'],
       phones: ['+1 (555) 987-6543'],
+      documents: [
+        {
+          id: 'doc3',
+          subject: 'Strategic Partnership Agreement',
+          type: 'Contract',
+          dateTime: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          fileName: 'Partnership-Agreement.pdf',
+          fileUrl: '/documents/Partnership-Agreement.pdf',
+          attachedDelegates: ['2', '3'],
+          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+        }
+      ],
       language: 'English'
     },
     {
@@ -132,7 +169,29 @@ export default function Dashboard() {
         {
           id: '3',
           text: 'Specializes in environmental policy',
-          createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() // 10 days ago
+          createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
+        }
+      ],
+      documents: [
+        {
+          id: 'doc4',
+          subject: 'Environmental Impact Assessment',
+          type: 'Report',
+          dateTime: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+          fileName: 'Environmental-Impact.pdf',
+          fileUrl: '/documents/Environmental-Impact.pdf',
+          attachedDelegates: ['3'],
+          createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'doc5',
+          subject: 'Online Climate Summit Notes',
+          type: 'Meeting (Online)',
+          dateTime: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          fileName: 'Climate-Summit-Notes.pdf',
+          fileUrl: '/documents/Climate-Summit-Notes.pdf',
+          attachedDelegates: ['3', '4'],
+          createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
         }
       ],
       language: 'English'
@@ -148,6 +207,18 @@ export default function Dashboard() {
       isNewsletterSubscribed: true,
       emails: ['info@innovationlabs.com'],
       phones: ['+1 (555) 234-5678', '+1 (555) 234-5679'],
+      documents: [
+        {
+          id: 'doc6',
+          subject: 'Technology Roadmap 2025',
+          type: 'Report',
+          dateTime: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+          fileName: 'Tech-Roadmap-2025.pdf',
+          fileUrl: '/documents/Tech-Roadmap-2025.pdf',
+          attachedDelegates: ['4'],
+          createdAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString()
+        }
+      ],
       language: 'French'
     },
     {
@@ -163,6 +234,18 @@ export default function Dashboard() {
       role: 'Trade Representative',
       emails: ['john.smith@texas.gov'],
       phones: ['+1 (555) 345-6789'],
+      documents: [
+        {
+          id: 'doc7',
+          subject: 'Trade Agreement Review',
+          type: 'Meeting (In presence)',
+          dateTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+          fileName: 'Trade-Agreement-Review.pdf',
+          fileUrl: '/documents/Trade-Agreement-Review.pdf',
+          attachedDelegates: ['5'],
+          createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+        }
+      ],
       language: 'English'
     },
     {
@@ -176,9 +259,71 @@ export default function Dashboard() {
       isNewsletterSubscribed: true,
       emails: ['contact@futuresystems.com', 'support@futuresystems.com'],
       phones: ['+1 (555) 567-8901'],
+      documents: [
+        {
+          id: 'doc8',
+          subject: 'Digital Transformation Strategy',
+          type: 'Report',
+          dateTime: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+          fileName: 'Digital-Transformation.pdf',
+          fileUrl: '/documents/Digital-Transformation.pdf',
+          attachedDelegates: ['6'],
+          createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'doc9',
+          subject: 'Security Compliance Framework',
+          type: 'Other',
+          dateTime: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString(),
+          fileName: 'Security-Compliance.pdf',
+          fileUrl: '/documents/Security-Compliance.pdf',
+          attachedDelegates: ['6'],
+          createdAt: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'doc10',
+          subject: 'Quarterly Performance Review',
+          type: 'Meeting (Online)',
+          dateTime: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+          fileName: 'Q3-Performance-Review.pdf',
+          fileUrl: '/documents/Q3-Performance-Review.pdf',
+          attachedDelegates: ['6', '1'],
+          createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
+        }
+      ],
       language: 'French'
     }
   ]
+
+  // Get all documents from all delegates and sort by creation date
+  const allDocuments: DelegateDocument[] = recentDelegates
+    .flatMap(delegate => delegate.documents || [])
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 10)
+
+  const formatDateTime = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString()
+  }
+
+  const getTypeColor = (type: DelegateDocument['type']) => {
+    switch (type) {
+      case 'Meeting (In presence)':
+        return 'bg-blue-100 text-blue-800'
+      case 'Meeting (Online)':
+        return 'bg-purple-100 text-purple-800'
+      case 'Report':
+        return 'bg-green-100 text-green-800'
+      case 'Contract':
+        return 'bg-orange-100 text-orange-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+  const handleDownloadDocument = (document: DelegateDocument) => {
+    console.log('Downloading document:', document.fileName)
+    // In a real implementation, this would download the file
+  }
 
   return (
     <div className="space-y-6">
@@ -232,7 +377,7 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Recent Contacts */}
         <Card>
           <CardHeader>
@@ -270,6 +415,53 @@ export default function Dashboard() {
                 onViewParticipants={(event) => console.log('View participants for:', event)}
               />
             ))}
+          </CardContent>
+        </Card>
+
+        {/* Recent Documents */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              Recent Documents
+              <Badge variant="secondary">{allDocuments.length}</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 max-h-96 overflow-y-auto">
+            {allDocuments.length === 0 ? (
+              <p className="text-sm text-gray-500 text-center py-4">No documents yet</p>
+            ) : (
+              allDocuments.map((document) => (
+                <div key={document.id} className="p-3 bg-gray-50 rounded-lg space-y-2">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1 flex-1 min-w-0">
+                      <h4 className="font-medium text-sm truncate">{document.subject}</h4>
+                      <div className="flex items-center gap-2">
+                        <Badge className={getTypeColor(document.type)} variant="secondary" size="sm">
+                          {document.type}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-gray-500">
+                        <Calendar className="h-3 w-3" />
+                        <span>{formatDateTime(document.dateTime)}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-xs">
+                        <FileText className="h-3 w-3 text-red-600" />
+                        <span className="truncate">{document.fileName}</span>
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDownloadDocument(document)}
+                      className="h-8 w-8 p-0 shrink-0"
+                    >
+                      <Download className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))
+            )}
           </CardContent>
         </Card>
 
