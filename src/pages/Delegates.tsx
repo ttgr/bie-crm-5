@@ -12,13 +12,13 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Plus, UserCheck } from "lucide-react"
+import { Plus, UserCheck, FileText } from "lucide-react"
 import { useDelegates } from "@/hooks/useDelegates"
 import { DelegateStats } from "@/components/delegates/DelegateStats"
 import { DelegateExportActions } from "@/components/delegates/DelegateExportActions"
 import { DelegateFilters } from "@/components/delegates/DelegateFilters"
 import { DelegateResultsHeader } from "@/components/delegates/DelegateResultsHeader"
-import { DocumentAttachmentButton } from "@/components/documents/DocumentAttachmentButton"
+import { DocumentAttachmentForm } from "@/components/documents/DocumentAttachmentForm"
 import { DelegateDocument } from "@/types/delegate"
 
 export default function Delegates() {
@@ -51,6 +51,7 @@ export default function Delegates() {
   const [selectedDelegates, setSelectedDelegates] = useState<Set<string>>(new Set())
   const [selectMode, setSelectMode] = useState(false)
   const [gridCols, setGridCols] = useState(4) // Default to 4 columns
+  const [isDocumentFormOpen, setIsDocumentFormOpen] = useState(false)
 
   const handleSelectDelegate = (delegateId: string, checked: boolean) => {
     const newSelected = new Set(selectedDelegates)
@@ -164,6 +165,14 @@ export default function Delegates() {
           >
             <UserCheck className="h-4 w-4 mr-2" />
             <span className="truncate">{selectMode ? 'Cancel Selection' : 'Select Mode'}</span>
+          </Button>
+          <Button 
+            variant="outline"
+            onClick={() => setIsDocumentFormOpen(true)}
+            className="w-full sm:w-auto"
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            <span className="truncate">Attach Document</span>
           </Button>
           <Button className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
@@ -290,8 +299,10 @@ export default function Delegates() {
         </Card>
       )}
 
-      {/* Document Attachment Button */}
-      <DocumentAttachmentButton
+      {/* Document Attachment Form */}
+      <DocumentAttachmentForm
+        isOpen={isDocumentFormOpen}
+        onClose={() => setIsDocumentFormOpen(false)}
         delegates={delegatesOnly}
         onAttachDocument={handleAttachDocument}
       />
