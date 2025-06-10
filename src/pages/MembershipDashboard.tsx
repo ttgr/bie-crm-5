@@ -4,7 +4,7 @@ import { StatsCard } from "@/components/StatsCard"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Users, Mail, Clock, MessageSquare, Eye, UserPlus } from "lucide-react"
+import { Users, Mail, Clock, MessageSquare, Eye, UserPlus, Building } from "lucide-react"
 import { format } from "date-fns"
 import { useMemo } from "react"
 
