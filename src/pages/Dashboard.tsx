@@ -1,4 +1,3 @@
-
 import { StatsCard } from "@/components/StatsCard"
 import { ContactCard, Contact } from "@/components/ContactCard"
 import { EventCard, Event } from "@/components/EventCard"
@@ -437,7 +436,7 @@ export default function Dashboard() {
                     <div className="space-y-1 flex-1 min-w-0">
                       <h4 className="font-medium text-sm truncate">{document.subject}</h4>
                       <div className="flex items-center gap-2">
-                        <Badge className={getTypeColor(document.type)} variant="secondary" size="sm">
+                        <Badge className={getTypeColor(document.type)} variant="secondary">
                           {document.type}
                         </Badge>
                       </div>
