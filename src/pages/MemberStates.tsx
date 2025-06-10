@@ -49,6 +49,7 @@ export default function MemberStates() {
 
   const [selectedDelegates, setSelectedDelegates] = useState<Set<string>>(new Set())
   const [selectMode, setSelectMode] = useState(false)
+  const [gridCols, setGridCols] = useState(3)
 
   const handleSelectDelegate = (delegateId: string, checked: boolean) => {
     const newSelected = new Set(selectedDelegates)
@@ -65,6 +66,16 @@ export default function MemberStates() {
       setSelectedDelegates(new Set(currentMemberStates.map(d => d.id)))
     } else {
       setSelectedDelegates(new Set())
+    }
+  }
+
+  const getGridClasses = () => {
+    switch (gridCols) {
+      case 1: return "grid-cols-1"
+      case 2: return "grid-cols-1 md:grid-cols-2"
+      case 3: return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+      case 4: return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+      default: return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
     }
   }
 
@@ -177,9 +188,11 @@ export default function MemberStates() {
         sortBy={sortBy}
         pageSize={pageSize}
         handlePageSizeChange={handlePageSizeChange}
+        gridCols={gridCols}
+        onGridColsChange={setGridCols}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className={`grid ${getGridClasses()} gap-6`}>
         {currentMemberStates.map((delegate) => (
           <div key={delegate.id} className="relative">
             {selectMode && (
