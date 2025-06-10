@@ -1,3 +1,4 @@
+
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -49,7 +50,7 @@ export function MemberStateSelector({
           variant="outline"
           role="combobox"
           aria-expanded={memberStateOpen}
-          className="w-full sm:w-[300px] justify-between"
+          className="w-full sm:w-[300px] justify-between text-left"
         >
           <div className="flex items-center min-w-0">
             <Filter className="h-4 w-4 mr-2 shrink-0" />
