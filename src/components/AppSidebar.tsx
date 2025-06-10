@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/collapsible"
 
 const membershipItems = [
-  { title: "Dashboard", url: "/", icon: BarChart3 },
+  { title: "Dashboard", url: "/dashboard", icon: BarChart3 },
   { title: "Delegates", url: "/delegates", icon: UserCheck },
   { title: "Member States", url: "/member-states", icon: Building },
 ]
@@ -57,11 +57,11 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {/* Main Dashboard outside membership */}
+              {/* Membership Dashboard as standalone */}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <NavLink
-                    to="/dashboard"
+                    to="/"
                     className={({ isActive }) =>
                       `flex items-center gap-3 p-2 rounded-md transition-colors ${
                         isActive
@@ -71,7 +71,7 @@ export function AppSidebar() {
                     }
                   >
                     <Home className="h-4 w-4" />
-                    <span>Dashboard</span>
+                    <span>Membership Dashboard</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
