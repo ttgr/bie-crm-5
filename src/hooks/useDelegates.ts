@@ -14,53 +14,53 @@ export function useDelegates() {
   const generateMockDelegates = (): Delegate[] => {
     const delegates: Delegate[] = []
     const countries = [
-      { name: 'United States', language: 'English' as const },
-      { name: 'Canada', language: Math.random() > 0.5 ? 'English' as const : 'French' as const },
-      { name: 'United Kingdom', language: 'English' as const },
-      { name: 'Germany', language: 'English' as const },
-      { name: 'France', language: 'French' as const },
-      { name: 'Italy', language: 'English' as const },
-      { name: 'Spain', language: 'English' as const },
-      { name: 'Netherlands', language: 'English' as const },
-      { name: 'Sweden', language: 'English' as const },
-      { name: 'Norway', language: 'English' as const },
-      { name: 'Denmark', language: 'English' as const },
-      { name: 'Finland', language: 'English' as const },
-      { name: 'Poland', language: 'English' as const },
-      { name: 'Czech Republic', language: 'English' as const },
-      { name: 'Austria', language: 'English' as const },
-      { name: 'Switzerland', language: Math.random() > 0.5 ? 'English' as const : 'French' as const },
-      { name: 'Japan', language: 'English' as const },
-      { name: 'South Korea', language: 'English' as const },
-      { name: 'Australia', language: 'English' as const },
-      { name: 'New Zealand', language: 'English' as const },
-      { name: 'Brazil', language: 'English' as const },
-      { name: 'Argentina', language: 'English' as const },
-      { name: 'Mexico', language: 'English' as const },
-      { name: 'Chile', language: 'English' as const },
-      { name: 'India', language: 'English' as const },
-      { name: 'Singapore', language: 'English' as const },
-      { name: 'Thailand', language: 'English' as const },
-      { name: 'Malaysia', language: 'English' as const },
-      { name: 'South Africa', language: 'English' as const },
-      { name: 'Egypt', language: 'English' as const },
-      { name: 'Morocco', language: 'French' as const },
-      { name: 'Turkey', language: 'English' as const },
-      { name: 'Russia', language: 'English' as const },
-      { name: 'Ukraine', language: 'English' as const },
-      { name: 'Romania', language: 'English' as const },
-      { name: 'Bulgaria', language: 'English' as const },
-      { name: 'Greece', language: 'English' as const },
-      { name: 'Portugal', language: 'English' as const },
-      { name: 'Ireland', language: 'English' as const },
-      { name: 'Belgium', language: Math.random() > 0.5 ? 'English' as const : 'French' as const },
-      { name: 'Luxembourg', language: 'French' as const },
-      { name: 'Senegal', language: 'French' as const },
-      { name: 'Mali', language: 'French' as const },
-      { name: 'Ivory Coast', language: 'French' as const },
-      { name: 'Tunisia', language: 'French' as const },
-      { name: 'Algeria', language: 'French' as const },
-      { name: 'Madagascar', language: 'French' as const }
+      { name: 'United States', language: 'English' as const, hasVotingRights: true },
+      { name: 'Canada', language: Math.random() > 0.5 ? 'English' as const : 'French' as const, hasVotingRights: true },
+      { name: 'United Kingdom', language: 'English' as const, hasVotingRights: false },
+      { name: 'Germany', language: 'English' as const, hasVotingRights: true },
+      { name: 'France', language: 'French' as const, hasVotingRights: true },
+      { name: 'Italy', language: 'English' as const, hasVotingRights: false },
+      { name: 'Spain', language: 'English' as const, hasVotingRights: true },
+      { name: 'Netherlands', language: 'English' as const, hasVotingRights: false },
+      { name: 'Sweden', language: 'English' as const, hasVotingRights: true },
+      { name: 'Norway', language: 'English' as const, hasVotingRights: false },
+      { name: 'Denmark', language: 'English' as const, hasVotingRights: true },
+      { name: 'Finland', language: 'English' as const, hasVotingRights: false },
+      { name: 'Poland', language: 'English' as const, hasVotingRights: true },
+      { name: 'Czech Republic', language: 'English' as const, hasVotingRights: false },
+      { name: 'Austria', language: 'English' as const, hasVotingRights: true },
+      { name: 'Switzerland', language: Math.random() > 0.5 ? 'English' as const : 'French' as const, hasVotingRights: false },
+      { name: 'Japan', language: 'English' as const, hasVotingRights: true },
+      { name: 'South Korea', language: 'English' as const, hasVotingRights: false },
+      { name: 'Australia', language: 'English' as const, hasVotingRights: true },
+      { name: 'New Zealand', language: 'English' as const, hasVotingRights: false },
+      { name: 'Brazil', language: 'English' as const, hasVotingRights: true },
+      { name: 'Argentina', language: 'English' as const, hasVotingRights: false },
+      { name: 'Mexico', language: 'English' as const, hasVotingRights: true },
+      { name: 'Chile', language: 'English' as const, hasVotingRights: false },
+      { name: 'India', language: 'English' as const, hasVotingRights: true },
+      { name: 'Singapore', language: 'English' as const, hasVotingRights: false },
+      { name: 'Thailand', language: 'English' as const, hasVotingRights: true },
+      { name: 'Malaysia', language: 'English' as const, hasVotingRights: false },
+      { name: 'South Africa', language: 'English' as const, hasVotingRights: true },
+      { name: 'Egypt', language: 'English' as const, hasVotingRights: false },
+      { name: 'Morocco', language: 'French' as const, hasVotingRights: true },
+      { name: 'Turkey', language: 'English' as const, hasVotingRights: false },
+      { name: 'Russia', language: 'English' as const, hasVotingRights: true },
+      { name: 'Ukraine', language: 'English' as const, hasVotingRights: false },
+      { name: 'Romania', language: 'English' as const, hasVotingRights: true },
+      { name: 'Bulgaria', language: 'English' as const, hasVotingRights: false },
+      { name: 'Greece', language: 'English' as const, hasVotingRights: true },
+      { name: 'Portugal', language: 'English' as const, hasVotingRights: false },
+      { name: 'Ireland', language: 'English' as const, hasVotingRights: true },
+      { name: 'Belgium', language: Math.random() > 0.5 ? 'English' as const : 'French' as const, hasVotingRights: false },
+      { name: 'Luxembourg', language: 'French' as const, hasVotingRights: true },
+      { name: 'Senegal', language: 'French' as const, hasVotingRights: false },
+      { name: 'Mali', language: 'French' as const, hasVotingRights: true },
+      { name: 'Ivory Coast', language: 'French' as const, hasVotingRights: false },
+      { name: 'Tunisia', language: 'French' as const, hasVotingRights: true },
+      { name: 'Algeria', language: 'French' as const, hasVotingRights: false },
+      { name: 'Madagascar', language: 'French' as const, hasVotingRights: true }
     ]
     const names = [
       'Sarah Johnson', 'Michael Chen', 'Emma Wilson', 'David Rodriguez', 'Lisa Anderson',
@@ -100,7 +100,7 @@ export function useDelegates() {
       const membershipType = isOrganization ? 'member_state' : 'delegate'
       const country = countries[Math.floor(Math.random() * countries.length)]
       const baseEmail = isOrganization 
-        ? organizations[Math.floor(Math.random() * organizations.length)].toLowerCase().replace(/\s+/g, '') + Math.floor(i/10)
+        ? country.name.toLowerCase().replace(/\s+/g, '') + Math.floor(i/10)
         : names[Math.floor(Math.random() * names.length)].toLowerCase().replace(/\s+/g, '') + Math.floor(i/20)
       
       // Generate random notes for some delegates
@@ -120,8 +120,8 @@ export function useDelegates() {
       delegates.push({
         id: i.toString(),
         contactId: i.toString(),
-        contactName: isOrganization 
-          ? organizations[Math.floor(Math.random() * organizations.length)] + ` - ${country.name}`
+        contactName: membershipType === 'member_state' 
+          ? country.name  // Only country name for member states
           : names[Math.floor(Math.random() * names.length)],
         contactType: isOrganization ? 'organization' : 'individual',
         startDate: new Date(2020 + Math.floor(Math.random() * 5), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
@@ -131,6 +131,7 @@ export function useDelegates() {
         memberState: country.name,
         isNewsletterSubscribed: Math.random() > 0.4,
         isBulletinSubscribed: Math.random() > 0.5,
+        hasVotingRights: membershipType === 'member_state' ? country.hasVotingRights : undefined,
         role: membershipType === 'delegate' ? roles[Math.floor(Math.random() * roles.length)] : undefined,
         emails: [
           `${baseEmail}@${country.name.toLowerCase().replace(/\s+/g, '')}.gov`,

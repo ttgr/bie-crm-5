@@ -21,7 +21,7 @@ export function MemberStateCardActions({ delegate, onViewContact, onToggleVoting
           onClick={() => onToggleVotingRights?.(delegate)} 
           className="flex-1 border-purple-200 text-purple-600 hover:bg-purple-50 hover:text-purple-700"
         >
-          {delegate.hasVotingRights ? "Remove Vote" : "Grant Vote"}
+          {delegate.hasVotingRights ? "Revoke Vote" : "Grant Vote"}
         </Button>
       )}
     </div>
