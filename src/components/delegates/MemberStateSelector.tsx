@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -50,7 +49,7 @@ export function MemberStateSelector({
           variant="outline"
           role="combobox"
           aria-expanded={memberStateOpen}
-          className="w-full sm:w-[220px] justify-between"
+          className="w-full sm:w-[300px] justify-between"
         >
           <div className="flex items-center min-w-0">
             <Filter className="h-4 w-4 mr-2 shrink-0" />
@@ -61,7 +60,7 @@ export function MemberStateSelector({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[240px] p-0">
+      <PopoverContent className="w-[320px] p-0">
         <Command
           filter={(value, search) => {
             const normalizedValue = normalizeText(value)
