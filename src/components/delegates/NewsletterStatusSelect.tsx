@@ -13,7 +13,7 @@ export function NewsletterStatusSelect({
 }: NewsletterStatusSelectProps) {
   return (
     <Select value={selectedNewsletterStatus} onValueChange={setSelectedNewsletterStatus}>
-      <SelectTrigger className="w-full sm:w-[200px]">
+      <SelectTrigger className="w-full sm:w-[220px]">
         <Mail className="h-4 w-4 mr-2 shrink-0" />
         <SelectValue placeholder="Newsletter Status" />
       </SelectTrigger>
