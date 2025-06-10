@@ -1,9 +1,8 @@
-
 import { StatsCard } from "@/components/StatsCard"
 import { ContactCard, Contact } from "@/components/ContactCard"
 import { EventCard, Event } from "@/components/EventCard"
 import { DelegateCard } from "@/components/DelegateCard"
-import { Users, Calendar, Building, UserCheck, FileText, Download } from "lucide-react"
+import { Users, Calendar, Building, UserCheck, FileText, Download, Vote } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -12,13 +11,13 @@ import { Delegate, DelegateDocument } from "@/types/delegate"
 export default function Dashboard() {
   // Mock data - in a real app, this would come from your backend
   const stats = {
-    totalContacts: 247,
-    individuals: 198,
-    organizations: 49,
-    upcomingEvents: 12,
     activeDelegates: 15,
-    activeMemberStates: 8
+    activeMemberStates: 8,
+    memberStatesWithVotingRight: 6, // Subset of member states that have voting rights
   }
+
+  // Calculate Quorum as 2/3 of Member States with Voting Right
+  const quorum = Math.ceil((2/3) * stats.memberStatesWithVotingRight)
 
   const recentContacts: Contact[] = [
     {
@@ -346,26 +345,7 @@ export default function Dashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
-        <StatsCard
-          title="Total Contacts"
-          value={stats.totalContacts}
-          icon={Users}
-          description="All contacts in your CRM"
-          trend={{ value: 12, isPositive: true }}
-        />
-        <StatsCard
-          title="Individuals"
-          value={stats.individuals}
-          icon={UserCheck}
-          description="Individual contacts"
-        />
-        <StatsCard
-          title="Organizations"
-          value={stats.organizations}
-          icon={Building}
-          description="Company contacts"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
           title="Current Delegates"
           value={stats.activeDelegates}
@@ -381,11 +361,16 @@ export default function Dashboard() {
           trend={{ value: 1, isPositive: true }}
         />
         <StatsCard
-          title="Upcoming Events"
-          value={stats.upcomingEvents}
-          icon={Calendar}
-          description="Events this month"
-          trend={{ value: 3, isPositive: true }}
+          title="Member States with right to Vote"
+          value={stats.memberStatesWithVotingRight}
+          icon={Vote}
+          description="Member states with voting rights"
+        />
+        <StatsCard
+          title="Quorum"
+          value={quorum}
+          icon={Users}
+          description="2/3 of voting member states"
         />
       </div>
 
