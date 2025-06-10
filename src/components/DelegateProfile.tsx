@@ -8,6 +8,7 @@ import { MembershipTab } from "@/components/profile/MembershipTab"
 import { EventsTab } from "@/components/profile/EventsTab"
 import { RelationshipsTab } from "@/components/profile/RelationshipsTab"
 import { NotesTab } from "@/components/profile/NotesTab"
+import { DocumentsTab } from "@/components/profile/DocumentsTab"
 import { ActivityLogTab } from "@/components/profile/ActivityLogTab"
 
 interface DelegateProfileProps {
@@ -30,12 +31,13 @@ export function DelegateProfile({ delegate, isOpen, onClose }: DelegateProfilePr
           <ProfileHeader delegate={delegate} />
 
           <Tabs defaultValue="contact" className="w-full">
-            <TabsList className="grid w-full grid-cols-6">
+            <TabsList className="grid w-full grid-cols-7">
               <TabsTrigger value="contact">Contact Details</TabsTrigger>
               <TabsTrigger value="membership">Membership</TabsTrigger>
               <TabsTrigger value="events">Events</TabsTrigger>
               <TabsTrigger value="relationships">Relationships</TabsTrigger>
               <TabsTrigger value="notes">Notes</TabsTrigger>
+              <TabsTrigger value="documents">Documents</TabsTrigger>
               <TabsTrigger value="activity">Activity Log</TabsTrigger>
             </TabsList>
 
@@ -57,6 +59,10 @@ export function DelegateProfile({ delegate, isOpen, onClose }: DelegateProfilePr
 
             <TabsContent value="notes" className="space-y-4">
               <NotesTab initialNotes={delegate.notes || []} delegateId={delegate.id} />
+            </TabsContent>
+
+            <TabsContent value="documents" className="space-y-4">
+              <DocumentsTab documents={delegate.documents || []} delegateId={delegate.id} />
             </TabsContent>
 
             <TabsContent value="activity" className="space-y-4">

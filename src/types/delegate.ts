@@ -5,6 +5,17 @@ export interface DelegateNote {
   createdAt: string
 }
 
+export interface DelegateDocument {
+  id: string
+  subject: string
+  type: 'Meeting (In presence)' | 'Meeting (Online)' | 'Report' | 'Contract' | 'Other'
+  dateTime: string
+  fileName: string
+  fileUrl: string
+  attachedDelegates: string[] // Array of delegate IDs
+  createdAt: string
+}
+
 export interface Delegate {
   id: string
   contactId: string
@@ -20,5 +31,6 @@ export interface Delegate {
   emails: string[] // Multiple email addresses
   phones: string[] // Multiple phone numbers
   notes?: DelegateNote[] // Changed to array of timestamped notes
+  documents?: DelegateDocument[] // Added documents array
   language: 'English' | 'French' // Preferred communication language
 }

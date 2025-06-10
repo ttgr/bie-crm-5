@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card"
 import { Delegate, DelegateNote } from "@/types/delegate"
 import { useState } from "react"
 import { NotesModal } from "@/components/NotesModal"
+import { DocumentsModal } from "@/components/documents/DocumentsModal"
 import { DelegateProfile } from "@/components/DelegateProfile"
 import { DelegateCardHeader } from "./delegate-card/DelegateCardHeader"
 import { DelegateCardContent } from "./delegate-card/DelegateCardContent"
@@ -16,6 +17,7 @@ interface DelegateCardProps {
 
 export function DelegateCard({ delegate, onEndMembership, onViewContact }: DelegateCardProps) {
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false)
+  const [isDocumentsModalOpen, setIsDocumentsModalOpen] = useState(false)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
 
   const handleViewContact = () => {
@@ -37,12 +39,17 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
     setIsNotesModalOpen(true)
   }
 
+  const handleDocumentsClick = () => {
+    setIsDocumentsModalOpen(true)
+  }
+
   return (
     <>
       <Card className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1 flex flex-col h-full w-full">
         <DelegateCardHeader 
           delegate={delegate} 
           onNotesClick={handleNotesClick}
+          onDocumentsClick={handleDocumentsClick}
         />
         
         <DelegateCardContent 
@@ -63,6 +70,13 @@ export function DelegateCard({ delegate, onEndMembership, onViewContact }: Deleg
         delegateName={delegate.contactName}
         notes={delegate.notes || []}
         onAddNote={handleAddNote}
+      />
+
+      <DocumentsModal
+        isOpen={isDocumentsModalOpen}
+        onClose={() => setIsDocumentsModalOpen(false)}
+        delegateName={delegate.contactName}
+        documents={delegate.documents || []}
       />
 
       <DelegateProfile
