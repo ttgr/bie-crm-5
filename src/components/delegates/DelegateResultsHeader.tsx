@@ -60,7 +60,7 @@ export function DelegateResultsHeader({
           <h2 className="text-lg font-semibold">
             {filteredDelegatesLength} member{filteredDelegatesLength !== 1 ? 's' : ''}
           </h2>
-          {(activeTab !== 'all' || selectedMemberState !== "all_states" || selectedNewsletterStatus !== "all_newsletter" || sortBy !== "newest") && (
+          {(activeTab !== 'all' || selectedMemberState !== "all_states" || selectedNewsletterStatus !== "all_voting" || sortBy !== "newest") && (
             <div className="flex gap-2">
               {activeTab !== 'all' && (
                 <Badge variant="secondary">
@@ -73,9 +73,9 @@ export function DelegateResultsHeader({
                   {selectedMemberState}
                 </Badge>
               )}
-              {selectedNewsletterStatus !== "all_newsletter" && (
+              {selectedNewsletterStatus !== "all_voting" && (
                 <Badge variant="outline">
-                  {selectedNewsletterStatus === 'subscribed' ? 'Newsletter: Subscribed' : 'Newsletter: Not Subscribed'}
+                  {selectedNewsletterStatus === 'has_voting_rights' ? 'Voting Rights: Yes' : 'Voting Rights: No'}
                 </Badge>
               )}
               {sortBy !== "newest" && (

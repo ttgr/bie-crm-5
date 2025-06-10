@@ -1,23 +1,22 @@
 
-import { Card, CardContent } from "@/components/ui/card"
 import { SearchBar } from "./SearchBar"
-import { SortSelect } from "./SortSelect"
-import { MemberStateSelector } from "./MemberStateSelector"
-import { NewsletterStatusSelect } from "./NewsletterStatusSelect"
 import { FilterTabs } from "./FilterTabs"
+import { MemberStateSelector } from "./MemberStateSelector"
+import { VotingRightsSelect } from "./VotingRightsSelect"
+import { SortSelect } from "./SortSelect"
 import { ClearFiltersButton } from "./ClearFiltersButton"
 
 interface DelegateFiltersProps {
   searchTerm: string
-  setSearchTerm: (value: string) => void
+  setSearchTerm: (term: string) => void
   sortBy: string
-  setSortBy: (value: string) => void
+  setSortBy: (sort: string) => void
   selectedMemberState: string
-  setSelectedMemberState: (value: string) => void
-  selectedNewsletterStatus: string
-  setSelectedNewsletterStatus: (value: string) => void
+  setSelectedMemberState: (state: string) => void
+  selectedVotingRights: string
+  setSelectedVotingRights: (status: string) => void
   activeTab: string
-  setActiveTab: (value: string) => void
+  setActiveTab: (tab: string) => void
   memberStates: string[]
 }
 
@@ -28,52 +27,52 @@ export function DelegateFilters({
   setSortBy,
   selectedMemberState,
   setSelectedMemberState,
-  selectedNewsletterStatus,
-  setSelectedNewsletterStatus,
+  selectedVotingRights,
+  setSelectedVotingRights,
   activeTab,
   setActiveTab,
   memberStates
 }: DelegateFiltersProps) {
-  const clearFilters = () => {
+  const hasActiveFilters = searchTerm || 
+                          selectedMemberState !== "all_states" || 
+                          selectedVotingRights !== "all_voting" || 
+                          sortBy !== "newest"
+
+  const clearAllFilters = () => {
     setSearchTerm("")
-    setSortBy("newest")
     setSelectedMemberState("all_states")
-    setSelectedNewsletterStatus("all_newsletter")
-    setActiveTab("all")
+    setSelectedVotingRights("all_voting")
+    setSortBy("newest")
   }
 
   return (
-    <Card>
-      <CardContent className="p-4">
-        <div className="space-y-4">
-          {/* Search Bar - Full width on all devices */}
+    <div className="space-y-4">
+      <FilterTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+      
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex-1">
           <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-
-          {/* Filters Row - Stack on mobile, horizontal on larger screens */}
-          <div className="flex flex-col lg:flex-row gap-3 lg:gap-2">
-            {/* Left side filters - Stack on mobile, horizontal on tablet and up */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-2 flex-1">
-              <SortSelect sortBy={sortBy} setSortBy={setSortBy} />
-              
-              <MemberStateSelector 
-                selectedMemberState={selectedMemberState}
-                setSelectedMemberState={setSelectedMemberState}
-                memberStates={memberStates}
-              />
-
-              <NewsletterStatusSelect 
-                selectedNewsletterStatus={selectedNewsletterStatus}
-                setSelectedNewsletterStatus={setSelectedNewsletterStatus}
-              />
-
-              <ClearFiltersButton onClearFilters={clearFilters} />
-            </div>
-
-            {/* Tabs - Show on same line on desktop, separate line on mobile/tablet */}
-            <FilterTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-          </div>
         </div>
-      </CardContent>
-    </Card>
+        
+        <div className="flex flex-col sm:flex-row gap-4">
+          <MemberStateSelector 
+            selectedMemberState={selectedMemberState}
+            setSelectedMemberState={setSelectedMemberState}
+            memberStates={memberStates}
+          />
+          
+          <VotingRightsSelect 
+            selectedVotingRights={selectedVotingRights}
+            setSelectedVotingRights={setSelectedVotingRights}
+          />
+          
+          <SortSelect sortBy={sortBy} setSortBy={setSortBy} />
+          
+          {hasActiveFilters && (
+            <ClearFiltersButton onClear={clearAllFilters} />
+          )}
+        </div>
+      </div>
+    </div>
   )
 }

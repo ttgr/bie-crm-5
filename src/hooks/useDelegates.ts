@@ -5,7 +5,7 @@ export function useDelegates() {
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("active")
   const [selectedMemberState, setSelectedMemberState] = useState<string>("all_states")
-  const [selectedNewsletterStatus, setSelectedNewsletterStatus] = useState<string>("all_newsletter")
+  const [selectedVotingRights, setSelectedVotingRights] = useState<string>("all_voting")
   const [sortBy, setSortBy] = useState<string>("newest")
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(12)
@@ -168,10 +168,10 @@ export function useDelegates() {
                         (activeTab === 'delegates' && delegate.membershipType === 'delegate') ||
                         (activeTab === 'member_states' && delegate.membershipType === 'member_state')
       const matchesMemberState = selectedMemberState === "all_states" || delegate.memberState === selectedMemberState
-      const matchesNewsletter = selectedNewsletterStatus === "all_newsletter" || 
-                                (selectedNewsletterStatus === "subscribed" && delegate.isNewsletterSubscribed) ||
-                                (selectedNewsletterStatus === "not_subscribed" && !delegate.isNewsletterSubscribed)
-      return matchesSearch && matchesTab && matchesMemberState && matchesNewsletter
+      const matchesVotingRights = selectedVotingRights === "all_voting" || 
+                                (selectedVotingRights === "has_voting_rights" && delegate.hasVotingRights) ||
+                                (selectedVotingRights === "no_voting_rights" && !delegate.hasVotingRights)
+      return matchesSearch && matchesTab && matchesMemberState && matchesVotingRights
     }).sort((a, b) => {
       const dateA = new Date(a.startDate).getTime()
       const dateB = new Date(b.startDate).getTime()
@@ -189,7 +189,7 @@ export function useDelegates() {
           return dateB - dateA
       }
     })
-  }, [delegates, searchTerm, activeTab, selectedMemberState, selectedNewsletterStatus, sortBy])
+  }, [delegates, searchTerm, activeTab, selectedMemberState, selectedVotingRights, sortBy])
 
   const stats = useMemo(() => {
     const activeDelegates = delegates.filter(d => d.isActive && d.membershipType === 'delegate')
@@ -242,8 +242,8 @@ export function useDelegates() {
     setActiveTab,
     selectedMemberState,
     setSelectedMemberState,
-    selectedNewsletterStatus,
-    setSelectedNewsletterStatus,
+    selectedVotingRights,
+    setSelectedVotingRights,
     sortBy,
     setSortBy
   }

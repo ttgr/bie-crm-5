@@ -36,8 +36,8 @@ export default function MemberStates() {
     setActiveTab,
     selectedMemberState,
     setSelectedMemberState,
-    selectedNewsletterStatus,
-    setSelectedNewsletterStatus,
+    selectedVotingRights,
+    setSelectedVotingRights,
     sortBy,
     setSortBy,
     delegates
@@ -177,8 +177,8 @@ export default function MemberStates() {
         setSortBy={setSortBy}
         selectedMemberState={selectedMemberState}
         setSelectedMemberState={setSelectedMemberState}
-        selectedNewsletterStatus={selectedNewsletterStatus}
-        setSelectedNewsletterStatus={setSelectedNewsletterStatus}
+        selectedVotingRights={selectedVotingRights}
+        setSelectedVotingRights={setSelectedVotingRights}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         memberStates={memberStates}
@@ -193,7 +193,7 @@ export default function MemberStates() {
         totalPages={totalPages}
         activeTab={activeTab}
         selectedMemberState={selectedMemberState}
-        selectedNewsletterStatus={selectedNewsletterStatus}
+        selectedNewsletterStatus={selectedVotingRights}
         sortBy={sortBy}
         pageSize={pageSize}
         handlePageSizeChange={handlePageSizeChange}
@@ -252,7 +252,7 @@ export default function MemberStates() {
             <Building className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No member states found</h3>
             <p className="text-gray-600 mb-4">
-              {searchTerm || selectedMemberState || selectedNewsletterStatus
+              {searchTerm || selectedMemberState || selectedVotingRights
                 ? "Try adjusting your search terms or filters"
                 : "No member states available"}
             </p>
