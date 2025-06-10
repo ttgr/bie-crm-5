@@ -1,3 +1,4 @@
+
 import { StatsCard } from "@/components/StatsCard"
 import { ContactCard, Contact } from "@/components/ContactCard"
 import { EventCard, Event } from "@/components/EventCard"
@@ -319,6 +320,13 @@ export default function Dashboard() {
     }
   }
 
+  const getAttachedDelegatesNames = (attachedDelegateIds: string[]): string[] => {
+    return attachedDelegateIds.map(id => {
+      const delegate = recentDelegates.find(d => d.id === id)
+      return delegate ? delegate.contactName : `Unknown Delegate (${id})`
+    })
+  }
+
   const handleDownloadDocument = (document: DelegateDocument) => {
     console.log('Downloading document:', document.fileName)
     // In a real implementation, this would download the file
@@ -430,36 +438,51 @@ export default function Dashboard() {
             {allDocuments.length === 0 ? (
               <p className="text-sm text-gray-500 text-center py-4">No documents yet</p>
             ) : (
-              allDocuments.map((document) => (
-                <div key={document.id} className="p-3 bg-gray-50 rounded-lg space-y-2">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1 flex-1 min-w-0">
-                      <h4 className="font-medium text-sm truncate">{document.subject}</h4>
-                      <div className="flex items-center gap-2">
-                        <Badge className={getTypeColor(document.type)} variant="secondary">
-                          {document.type}
-                        </Badge>
+              allDocuments.map((document) => {
+                const attachedDelegatesNames = getAttachedDelegatesNames(document.attachedDelegates)
+                return (
+                  <div key={document.id} className="p-3 bg-gray-50 rounded-lg space-y-2">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1 flex-1 min-w-0">
+                        <h4 className="font-medium text-sm truncate">{document.subject}</h4>
+                        <div className="flex items-center gap-2">
+                          <Badge className={getTypeColor(document.type)} variant="secondary">
+                            {document.type}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-gray-500">
+                          <Calendar className="h-3 w-3" />
+                          <span>{formatDateTime(document.dateTime)}</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-xs">
+                          <FileText className="h-3 w-3 text-red-600" />
+                          <span className="truncate">{document.fileName}</span>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="text-xs text-gray-600 font-medium">
+                            Attached to {attachedDelegatesNames.length} delegate(s):
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {attachedDelegatesNames.map((name, index) => (
+                              <Badge key={index} variant="outline" className="text-xs">
+                                {name}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-gray-500">
-                        <Calendar className="h-3 w-3" />
-                        <span>{formatDateTime(document.dateTime)}</span>
-                      </div>
-                      <div className="flex items-center gap-1 text-xs">
-                        <FileText className="h-3 w-3 text-red-600" />
-                        <span className="truncate">{document.fileName}</span>
-                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDownloadDocument(document)}
+                        className="h-8 w-8 p-0 shrink-0"
+                      >
+                        <Download className="h-3 w-3" />
+                      </Button>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDownloadDocument(document)}
-                      className="h-8 w-8 p-0 shrink-0"
-                    >
-                      <Download className="h-3 w-3" />
-                    </Button>
                   </div>
-                </div>
-              ))
+                )
+              })
             )}
           </CardContent>
         </Card>
