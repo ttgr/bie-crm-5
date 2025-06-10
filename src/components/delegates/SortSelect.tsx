@@ -10,7 +10,7 @@ interface SortSelectProps {
 export function SortSelect({ sortBy, setSortBy }: SortSelectProps) {
   return (
     <Select value={sortBy} onValueChange={setSortBy}>
-      <SelectTrigger className="w-full sm:w-[160px]">
+      <SelectTrigger className="w-full sm:w-[180px]">
         <ArrowUpDown className="h-4 w-4 mr-2 shrink-0" />
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>
