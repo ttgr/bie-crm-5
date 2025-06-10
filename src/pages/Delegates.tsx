@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import { DelegateCard } from "@/components/DelegateCard"
 import { Button } from "@/components/ui/button"
@@ -288,7 +287,7 @@ export default function Delegates() {
             <UserCheck className="h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-3 sm:mb-4" />
             <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">No delegates found</h3>
             <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 px-2">
-              {searchTerm || selectedMemberState || selectedVotingRights
+              {searchTerm || selectedMemberState || selectedNewsletterStatus !== "all_newsletter"
                 ? "Try adjusting your search terms or filters"
                 : "Get started by assigning delegate memberships"}
             </p>
