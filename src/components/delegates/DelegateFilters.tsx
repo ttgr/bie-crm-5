@@ -74,20 +74,24 @@ export function DelegateFilters({
   return (
     <Card>
       <CardContent className="p-4">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
+        <div className="space-y-4">
+          {/* Search Bar - Full width on all devices */}
+          <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Search delegates..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 w-full"
             />
           </div>
-          <div className="flex gap-2">
+
+          {/* Filters Row - Stack on mobile, horizontal on larger screens */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-2">
+            {/* Sort Select */}
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[180px]">
-                <ArrowUpDown className="h-4 w-4 mr-2" />
+              <SelectTrigger className="w-full sm:w-[160px]">
+                <ArrowUpDown className="h-4 w-4 mr-2 shrink-0" />
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -98,16 +102,21 @@ export function DelegateFilters({
               </SelectContent>
             </Select>
             
+            {/* Member State Popover */}
             <Popover open={memberStateOpen} onOpenChange={setMemberStateOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   role="combobox"
                   aria-expanded={memberStateOpen}
-                  className="w-[200px] justify-between"
+                  className="w-full sm:w-[180px] justify-between"
                 >
-                  <Filter className="h-4 w-4 mr-2" />
-                  {getDisplayValue(selectedMemberState)}
+                  <div className="flex items-center min-w-0">
+                    <Filter className="h-4 w-4 mr-2 shrink-0" />
+                    <span className="truncate text-sm">
+                      {getDisplayValue(selectedMemberState)}
+                    </span>
+                  </div>
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
@@ -162,9 +171,10 @@ export function DelegateFilters({
               </PopoverContent>
             </Popover>
 
+            {/* Newsletter Status Select */}
             <Select value={selectedNewsletterStatus} onValueChange={setSelectedNewsletterStatus}>
-              <SelectTrigger className="w-[200px]">
-                <Mail className="h-4 w-4 mr-2" />
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <Mail className="h-4 w-4 mr-2 shrink-0" />
                 <SelectValue placeholder="Newsletter Status" />
               </SelectTrigger>
               <SelectContent>
@@ -174,16 +184,21 @@ export function DelegateFilters({
               </SelectContent>
             </Select>
 
-            <Button variant="outline" onClick={clearFilters}>
+            {/* Clear Filters Button */}
+            <Button variant="outline" onClick={clearFilters} className="w-full sm:w-auto">
               <X className="h-4 w-4 mr-2" />
-              Clear Filters
+              <span className="sm:hidden">Clear All Filters</span>
+              <span className="hidden sm:inline">Clear Filters</span>
             </Button>
+          </div>
 
+          {/* Tabs - Full width, centered on mobile */}
+          <div className="flex justify-center sm:justify-start">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
-              <TabsList>
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="active">Current</TabsTrigger>
-                <TabsTrigger value="inactive">Former</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:grid-cols-none sm:flex">
+                <TabsTrigger value="all" className="text-xs sm:text-sm">All</TabsTrigger>
+                <TabsTrigger value="active" className="text-xs sm:text-sm">Current</TabsTrigger>
+                <TabsTrigger value="inactive" className="text-xs sm:text-sm">Former</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
