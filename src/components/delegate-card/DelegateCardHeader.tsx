@@ -6,6 +6,7 @@ import { LanguageIcon } from "./LanguageIcon"
 import { NotesIndicator } from "./NotesIndicator"
 import { DocumentsIndicator } from "./DocumentsIndicator"
 import { NewsletterIndicator } from "./NewsletterIndicator"
+import { BulletinIndicator } from "./BulletinIndicator"
 
 interface DelegateCardHeaderProps {
   delegate: Delegate
@@ -33,6 +34,7 @@ export function DelegateCardHeader({ delegate, onNotesClick, onDocumentsClick }:
             </Badge>
             <LanguageIcon language={delegate.language} />
             <NewsletterIndicator isSubscribed={delegate.isNewsletterSubscribed} />
+            <BulletinIndicator isSubscribed={delegate.isBulletinSubscribed} />
           </div>
         </div>
         <div className="flex items-center gap-1 ml-2">

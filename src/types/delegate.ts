@@ -27,6 +27,7 @@ export interface Delegate {
   membershipType: 'delegate' | 'member_state'
   memberState?: string // Added member state for delegates
   isNewsletterSubscribed: boolean // Added newsletter subscription status
+  isBulletinSubscribed: boolean // Added bulletin subscription status
   role?: string // Role within the organization
   emails: string[] // Multiple email addresses
   phones: string[] // Multiple phone numbers
