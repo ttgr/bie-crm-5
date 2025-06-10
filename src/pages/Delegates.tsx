@@ -1,3 +1,4 @@
+
 import { useState } from "react"
 import { DelegateCard } from "@/components/DelegateCard"
 import { Button } from "@/components/ui/button"
@@ -38,8 +39,8 @@ export default function Delegates() {
     setActiveTab,
     selectedMemberState,
     setSelectedMemberState,
-    selectedNewsletterStatus,
-    setSelectedNewsletterStatus,
+    selectedVotingRights,
+    setSelectedVotingRights,
     sortBy,
     setSortBy
   } = useDelegates()
@@ -201,8 +202,8 @@ export default function Delegates() {
         setSortBy={setSortBy}
         selectedMemberState={selectedMemberState}
         setSelectedMemberState={setSelectedMemberState}
-        selectedNewsletterStatus={selectedNewsletterStatus}
-        setSelectedNewsletterStatus={setSelectedNewsletterStatus}
+        selectedVotingRights={selectedVotingRights}
+        setSelectedVotingRights={setSelectedVotingRights}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         memberStates={memberStates}
@@ -217,7 +218,7 @@ export default function Delegates() {
         totalPages={totalPages}
         activeTab={activeTab}
         selectedMemberState={selectedMemberState}
-        selectedNewsletterStatus={selectedNewsletterStatus}
+        selectedNewsletterStatus={selectedVotingRights}
         sortBy={sortBy}
         pageSize={pageSize}
         handlePageSizeChange={handlePageSizeChange}
@@ -287,7 +288,7 @@ export default function Delegates() {
             <UserCheck className="h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-3 sm:mb-4" />
             <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">No delegates found</h3>
             <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 px-2">
-              {searchTerm || selectedMemberState || selectedNewsletterStatus
+              {searchTerm || selectedMemberState || selectedVotingRights
                 ? "Try adjusting your search terms or filters"
                 : "Get started by assigning delegate memberships"}
             </p>

@@ -69,7 +69,7 @@ export function DelegateFilters({
           <SortSelect sortBy={sortBy} setSortBy={setSortBy} />
           
           {hasActiveFilters && (
-            <ClearFiltersButton onClear={clearAllFilters} />
+            <ClearFiltersButton onClearFilters={clearAllFilters} />
           )}
         </div>
       </div>
