@@ -28,6 +28,7 @@ export interface Delegate {
   memberState?: string // Added member state for delegates
   isNewsletterSubscribed: boolean // Added newsletter subscription status
   isBulletinSubscribed: boolean // Added bulletin subscription status
+  hasVotingRights?: boolean // Added voting rights for member states
   role?: string // Role within the organization
   emails: string[] // Multiple email addresses
   phones: string[] // Multiple phone numbers

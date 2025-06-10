@@ -1,6 +1,5 @@
-
 import { useState } from "react"
-import { DelegateCard } from "@/components/DelegateCard"
+import { MemberStateCard } from "@/components/MemberStateCard"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { 
@@ -13,7 +12,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Plus, Building } from "lucide-react"
+import { Building } from "lucide-react"
 import { useDelegates } from "@/hooks/useDelegates"
 import { DelegateStats } from "@/components/delegates/DelegateStats"
 import { DelegateExportActions } from "@/components/delegates/DelegateExportActions"
@@ -67,6 +66,11 @@ export default function MemberStates() {
     } else {
       setSelectedDelegates(new Set())
     }
+  }
+
+  const handleToggleVotingRights = (delegate: any) => {
+    console.log('Toggle voting rights for:', delegate)
+    // In a real app, this would make an API call to update voting rights
   }
 
   const getGridClasses = () => {
@@ -142,10 +146,6 @@ export default function MemberStates() {
             <Building className="h-4 w-4 mr-2" />
             {selectMode ? 'Cancel Selection' : 'Select Mode'}
           </Button>
-          <Button className="w-fit">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Member State
-          </Button>
         </div>
       </div>
 
@@ -204,10 +204,10 @@ export default function MemberStates() {
                 />
               </div>
             )}
-            <DelegateCard
+            <MemberStateCard
               delegate={delegate}
-              onEndMembership={(delegate) => console.log('End membership for:', delegate)}
               onViewContact={(delegate) => console.log('View contact for:', delegate)}
+              onToggleVotingRights={handleToggleVotingRights}
             />
           </div>
         ))}
@@ -245,12 +245,8 @@ export default function MemberStates() {
             <p className="text-gray-600 mb-4">
               {searchTerm || selectedMemberState || selectedNewsletterStatus
                 ? "Try adjusting your search terms or filters"
-                : "Get started by adding organizational member states"}
+                : "No member states available"}
             </p>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Member State
-            </Button>
           </CardContent>
         </Card>
       )}
