@@ -2,7 +2,6 @@
 import { CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Delegate } from "@/types/delegate"
-import { LanguageIcon } from "./LanguageIcon"
 import { NotesIndicator } from "./NotesIndicator"
 import { DocumentsIndicator } from "./DocumentsIndicator"
 import { VotingRightsIndicator } from "./VotingRightsIndicator"
@@ -28,7 +27,6 @@ export function MemberStateCardHeader({ delegate, onNotesClick, onDocumentsClick
             <Badge variant="outline" className="text-xs">
               Member State
             </Badge>
-            <LanguageIcon language={delegate.language} />
             <VotingRightsIndicator hasVotingRights={delegate.hasVotingRights || false} />
           </div>
         </div>

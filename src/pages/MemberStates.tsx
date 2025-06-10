@@ -39,12 +39,25 @@ export default function MemberStates() {
     selectedNewsletterStatus,
     setSelectedNewsletterStatus,
     sortBy,
-    setSortBy
+    setSortBy,
+    delegates
   } = useDelegates()
 
   // Filter to only show member states
   const memberStatesDelegates = filteredDelegates.filter(d => d.membershipType === 'member_state')
   const currentMemberStates = currentDelegates.filter(d => d.membershipType === 'member_state')
+
+  // Calculate member states stats
+  const activeMemberStates = delegates.filter(d => d.isActive && d.membershipType === 'member_state')
+  const memberStatesWithVotingRights = activeMemberStates.filter(d => d.hasVotingRights).length
+  const quorum = Math.ceil((2/3) * memberStatesWithVotingRights)
+
+  const memberStatesStats = {
+    ...stats,
+    activeMemberStates: activeMemberStates.length,
+    memberStatesWithVotingRights,
+    quorum
+  }
 
   const [selectedDelegates, setSelectedDelegates] = useState<Set<string>>(new Set())
   const [selectMode, setSelectMode] = useState(false)
@@ -149,11 +162,7 @@ export default function MemberStates() {
         </div>
       </div>
 
-      <DelegateStats stats={{
-        ...stats,
-        activeDelegates: stats.activeMemberStates,
-        totalActive: stats.activeMemberStates
-      }} />
+      <DelegateStats stats={memberStatesStats} />
 
       <DelegateExportActions 
         selectedDelegates={selectedDelegates}
