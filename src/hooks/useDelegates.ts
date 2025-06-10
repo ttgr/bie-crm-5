@@ -130,6 +130,7 @@ export function useDelegates() {
         membershipType,
         memberState: country.name,
         isNewsletterSubscribed: Math.random() > 0.4,
+        isBulletinSubscribed: Math.random() > 0.5,
         role: membershipType === 'delegate' ? roles[Math.floor(Math.random() * roles.length)] : undefined,
         emails: [
           `${baseEmail}@${country.name.toLowerCase().replace(/\s+/g, '')}.gov`,

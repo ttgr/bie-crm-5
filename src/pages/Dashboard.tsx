@@ -88,6 +88,7 @@ export default function Dashboard() {
       membershipType: 'delegate',
       memberState: 'California',
       isNewsletterSubscribed: true,
+      isBulletinSubscribed: true,
       role: 'Senior Delegate',
       emails: ['sarah.johnson@email.com'],
       phones: ['+1 (555) 123-4567'],
@@ -136,6 +137,7 @@ export default function Dashboard() {
       isActive: true,
       membershipType: 'member_state',
       isNewsletterSubscribed: false,
+      isBulletinSubscribed: true,
       emails: ['contact@globalcorp.com'],
       phones: ['+1 (555) 987-6543'],
       documents: [
@@ -162,6 +164,7 @@ export default function Dashboard() {
       membershipType: 'delegate',
       memberState: 'New York',
       isNewsletterSubscribed: true,
+      isBulletinSubscribed: false,
       role: 'Policy Advisor',
       emails: ['emma.wilson@gov.ny.us', 'e.wilson@personal.com'],
       phones: ['+1 (555) 456-7890'],
@@ -205,6 +208,7 @@ export default function Dashboard() {
       isActive: true,
       membershipType: 'member_state',
       isNewsletterSubscribed: true,
+      isBulletinSubscribed: false,
       emails: ['info@innovationlabs.com'],
       phones: ['+1 (555) 234-5678', '+1 (555) 234-5679'],
       documents: [
@@ -231,6 +235,7 @@ export default function Dashboard() {
       membershipType: 'delegate',
       memberState: 'Texas',
       isNewsletterSubscribed: false,
+      isBulletinSubscribed: true,
       role: 'Trade Representative',
       emails: ['john.smith@texas.gov'],
       phones: ['+1 (555) 345-6789'],
@@ -257,6 +262,7 @@ export default function Dashboard() {
       isActive: true,
       membershipType: 'member_state',
       isNewsletterSubscribed: true,
+      isBulletinSubscribed: true,
       emails: ['contact@futuresystems.com', 'support@futuresystems.com'],
       phones: ['+1 (555) 567-8901'],
       documents: [
