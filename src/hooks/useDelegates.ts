@@ -6,6 +6,7 @@ export function useDelegates() {
   const [activeTab, setActiveTab] = useState("active")
   const [selectedMemberState, setSelectedMemberState] = useState<string>("all_states")
   const [selectedVotingRights, setSelectedVotingRights] = useState<string>("all_voting")
+  const [selectedNewsletterStatus, setSelectedNewsletterStatus] = useState<string>("all_newsletter")
   const [sortBy, setSortBy] = useState<string>("newest")
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(12)
@@ -171,7 +172,10 @@ export function useDelegates() {
       const matchesVotingRights = selectedVotingRights === "all_voting" || 
                                 (selectedVotingRights === "has_voting_rights" && delegate.hasVotingRights) ||
                                 (selectedVotingRights === "no_voting_rights" && !delegate.hasVotingRights)
-      return matchesSearch && matchesTab && matchesMemberState && matchesVotingRights
+      const matchesNewsletterStatus = selectedNewsletterStatus === "all_newsletter" ||
+                                    (selectedNewsletterStatus === "subscribed" && delegate.isNewsletterSubscribed) ||
+                                    (selectedNewsletterStatus === "not_subscribed" && !delegate.isNewsletterSubscribed)
+      return matchesSearch && matchesTab && matchesMemberState && matchesVotingRights && matchesNewsletterStatus
     }).sort((a, b) => {
       const dateA = new Date(a.startDate).getTime()
       const dateB = new Date(b.startDate).getTime()
@@ -189,7 +193,7 @@ export function useDelegates() {
           return dateB - dateA
       }
     })
-  }, [delegates, searchTerm, activeTab, selectedMemberState, selectedVotingRights, sortBy])
+  }, [delegates, searchTerm, activeTab, selectedMemberState, selectedVotingRights, selectedNewsletterStatus, sortBy])
 
   const stats = useMemo(() => {
     const activeDelegates = delegates.filter(d => d.isActive && d.membershipType === 'delegate')
@@ -244,6 +248,8 @@ export function useDelegates() {
     setSelectedMemberState,
     selectedVotingRights,
     setSelectedVotingRights,
+    selectedNewsletterStatus,
+    setSelectedNewsletterStatus,
     sortBy,
     setSortBy
   }

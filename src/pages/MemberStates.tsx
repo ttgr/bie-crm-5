@@ -1,3 +1,4 @@
+
 import { useState } from "react"
 import { MemberStateCard } from "@/components/MemberStateCard"
 import { Button } from "@/components/ui/button"
@@ -16,7 +17,7 @@ import { Building } from "lucide-react"
 import { useDelegates } from "@/hooks/useDelegates"
 import { DelegateStats } from "@/components/delegates/DelegateStats"
 import { DelegateExportActions } from "@/components/delegates/DelegateExportActions"
-import { DelegateFilters } from "@/components/delegates/DelegateFilters"
+import { MemberStateFilters } from "@/components/delegates/MemberStateFilters"
 import { DelegateResultsHeader } from "@/components/delegates/DelegateResultsHeader"
 
 export default function MemberStates() {
@@ -170,7 +171,7 @@ export default function MemberStates() {
         selectMode={selectMode}
       />
 
-      <DelegateFilters 
+      <MemberStateFilters 
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         sortBy={sortBy}

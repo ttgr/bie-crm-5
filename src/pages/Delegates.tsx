@@ -39,8 +39,8 @@ export default function Delegates() {
     setActiveTab,
     selectedMemberState,
     setSelectedMemberState,
-    selectedVotingRights,
-    setSelectedVotingRights,
+    selectedNewsletterStatus,
+    setSelectedNewsletterStatus,
     sortBy,
     setSortBy
   } = useDelegates()
@@ -202,8 +202,8 @@ export default function Delegates() {
         setSortBy={setSortBy}
         selectedMemberState={selectedMemberState}
         setSelectedMemberState={setSelectedMemberState}
-        selectedVotingRights={selectedVotingRights}
-        setSelectedVotingRights={setSelectedVotingRights}
+        selectedNewsletterStatus={selectedNewsletterStatus}
+        setSelectedNewsletterStatus={setSelectedNewsletterStatus}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         memberStates={memberStates}
@@ -218,7 +218,7 @@ export default function Delegates() {
         totalPages={totalPages}
         activeTab={activeTab}
         selectedMemberState={selectedMemberState}
-        selectedNewsletterStatus={selectedVotingRights}
+        selectedNewsletterStatus={selectedNewsletterStatus}
         sortBy={sortBy}
         pageSize={pageSize}
         handlePageSizeChange={handlePageSizeChange}

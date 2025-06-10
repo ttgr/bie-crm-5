@@ -2,46 +2,46 @@
 import { SearchBar } from "./SearchBar"
 import { FilterTabs } from "./FilterTabs"
 import { MemberStateSelector } from "./MemberStateSelector"
-import { NewsletterStatusSelect } from "./NewsletterStatusSelect"
+import { VotingRightsSelect } from "./VotingRightsSelect"
 import { SortSelect } from "./SortSelect"
 import { ClearFiltersButton } from "./ClearFiltersButton"
 
-interface DelegateFiltersProps {
+interface MemberStateFiltersProps {
   searchTerm: string
   setSearchTerm: (term: string) => void
   sortBy: string
   setSortBy: (sort: string) => void
   selectedMemberState: string
   setSelectedMemberState: (state: string) => void
-  selectedNewsletterStatus: string
-  setSelectedNewsletterStatus: (status: string) => void
+  selectedVotingRights: string
+  setSelectedVotingRights: (status: string) => void
   activeTab: string
   setActiveTab: (tab: string) => void
   memberStates: string[]
 }
 
-export function DelegateFilters({
+export function MemberStateFilters({
   searchTerm,
   setSearchTerm,
   sortBy,
   setSortBy,
   selectedMemberState,
   setSelectedMemberState,
-  selectedNewsletterStatus,
-  setSelectedNewsletterStatus,
+  selectedVotingRights,
+  setSelectedVotingRights,
   activeTab,
   setActiveTab,
   memberStates
-}: DelegateFiltersProps) {
+}: MemberStateFiltersProps) {
   const hasActiveFilters = searchTerm || 
                           selectedMemberState !== "all_states" || 
-                          selectedNewsletterStatus !== "all_newsletter" || 
+                          selectedVotingRights !== "all_voting" || 
                           sortBy !== "newest"
 
   const clearAllFilters = () => {
     setSearchTerm("")
     setSelectedMemberState("all_states")
-    setSelectedNewsletterStatus("all_newsletter")
+    setSelectedVotingRights("all_voting")
     setSortBy("newest")
   }
 
@@ -61,9 +61,9 @@ export function DelegateFilters({
           memberStates={memberStates}
         />
         
-        <NewsletterStatusSelect 
-          selectedNewsletterStatus={selectedNewsletterStatus}
-          setSelectedNewsletterStatus={setSelectedNewsletterStatus}
+        <VotingRightsSelect 
+          selectedVotingRights={selectedVotingRights}
+          setSelectedVotingRights={setSelectedVotingRights}
         />
         
         <SortSelect sortBy={sortBy} setSortBy={setSortBy} />
