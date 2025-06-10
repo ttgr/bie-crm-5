@@ -1,6 +1,6 @@
 
 import { Card, CardContent } from "@/components/ui/card"
-import { Building, Vote, Users } from "lucide-react"
+import { Building, Vote, Users, UserCheck, Mail } from "lucide-react"
 
 interface DelegateStatsProps {
   stats: {
