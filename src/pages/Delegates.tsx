@@ -120,20 +120,24 @@ export default function Delegates() {
   const allCurrentSelected = currentDelegatesOnly.length > 0 && currentDelegatesOnly.every(d => selectedDelegates.has(d.id))
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Delegates</h1>
-          <p className="text-gray-600 mt-2">Manage individual delegate memberships</p>
+    <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
+      <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0 gap-4">
+        <div className="min-w-0">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 truncate">Delegates</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">Manage individual delegate memberships</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setSelectMode(!selectMode)}>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <Button 
+            variant="outline" 
+            onClick={() => setSelectMode(!selectMode)}
+            className="w-full sm:w-auto"
+          >
             <UserCheck className="h-4 w-4 mr-2" />
-            {selectMode ? 'Cancel Selection' : 'Select Mode'}
+            <span className="truncate">{selectMode ? 'Cancel Selection' : 'Select Mode'}</span>
           </Button>
-          <Button className="w-fit">
+          <Button className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
-            Assign Delegate
+            <span className="truncate">Assign Delegate</span>
           </Button>
         </div>
       </div>
@@ -180,10 +184,10 @@ export default function Delegates() {
         handlePageSizeChange={handlePageSizeChange}
       />
 
-      {/* Results Grid with equal height cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+      {/* Results Grid with responsive layout */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 auto-rows-fr">
         {currentDelegatesOnly.map((delegate) => (
-          <div key={delegate.id} className="relative flex w-full">
+          <div key={delegate.id} className="relative flex w-full min-w-0">
             {selectMode && (
               <div className="absolute top-2 left-2 z-10">
                 <Checkbox
@@ -202,24 +206,33 @@ export default function Delegates() {
         ))}
       </div>
 
-      {/* Pagination */}
+      {/* Pagination with responsive styling */}
       {totalPages > 1 && (
-        <div className="flex justify-center">
+        <div className="flex justify-center px-2">
           <Pagination>
-            <PaginationContent>
+            <PaginationContent className="flex-wrap gap-1">
               <PaginationItem>
                 <PaginationPrevious 
                   onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  className={`${currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} text-xs sm:text-sm`}
                 />
               </PaginationItem>
               
-              {renderPaginationItems()}
+              <div className="hidden sm:contents">
+                {renderPaginationItems()}
+              </div>
+              
+              {/* Mobile pagination - show only current page info */}
+              <div className="sm:hidden flex items-center gap-2 px-2">
+                <span className="text-xs text-gray-600">
+                  Page {currentPage} of {totalPages}
+                </span>
+              </div>
               
               <PaginationItem>
                 <PaginationNext 
                   onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
-                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  className={`${currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"} text-xs sm:text-sm`}
                 />
               </PaginationItem>
             </PaginationContent>
@@ -228,16 +241,16 @@ export default function Delegates() {
       )}
 
       {delegatesOnly.length === 0 && (
-        <Card className="text-center py-12">
-          <CardContent>
-            <UserCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No delegates found</h3>
-            <p className="text-gray-600 mb-4">
+        <Card className="text-center py-8 sm:py-12 mx-2 sm:mx-0">
+          <CardContent className="px-4 sm:px-6">
+            <UserCheck className="h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-3 sm:mb-4" />
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">No delegates found</h3>
+            <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 px-2">
               {searchTerm || selectedMemberState || selectedNewsletterStatus
                 ? "Try adjusting your search terms or filters"
                 : "Get started by assigning delegate memberships"}
             </p>
-            <Button>
+            <Button className="w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               Assign Delegate
             </Button>
