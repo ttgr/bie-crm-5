@@ -50,11 +50,11 @@ export function MemberStateSelector({
           variant="outline"
           role="combobox"
           aria-expanded={memberStateOpen}
-          className="w-full sm:w-[300px] justify-between text-left"
+          className="w-full sm:w-[300px] justify-between"
         >
           <div className="flex items-center min-w-0">
             <Filter className="h-4 w-4 mr-2 shrink-0" />
-            <span className="truncate text-sm">
+            <span className="truncate text-sm text-left">
               {getDisplayValue(selectedMemberState)}
             </span>
           </div>

@@ -13,9 +13,9 @@ export function NewsletterStatusSelect({
 }: NewsletterStatusSelectProps) {
   return (
     <Select value={selectedNewsletterStatus} onValueChange={setSelectedNewsletterStatus}>
-      <SelectTrigger className="w-full sm:w-[300px] text-left">
+      <SelectTrigger className="w-full sm:w-[300px]">
         <Mail className="h-4 w-4 mr-2 shrink-0" />
-        <SelectValue placeholder="Newsletter Status" />
+        <SelectValue placeholder="Newsletter Status" className="text-left" />
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all_newsletter">All Newsletter Status</SelectItem>

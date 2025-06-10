@@ -10,9 +10,9 @@ interface SortSelectProps {
 export function SortSelect({ sortBy, setSortBy }: SortSelectProps) {
   return (
     <Select value={sortBy} onValueChange={setSortBy}>
-      <SelectTrigger className="w-full sm:w-[300px] text-left">
+      <SelectTrigger className="w-full sm:w-[300px]">
         <ArrowUpDown className="h-4 w-4 mr-2 shrink-0" />
-        <SelectValue placeholder="Sort by" />
+        <SelectValue placeholder="Sort by" className="text-left" />
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="newest">Newest First</SelectItem>
