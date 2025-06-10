@@ -10,7 +10,7 @@ interface DelegateCardActionsProps {
 
 export function DelegateCardActions({ delegate, onViewContact, onEndMembership }: DelegateCardActionsProps) {
   return (
-    <div className="flex gap-2 pt-2 mt-auto">
+    <div className="flex gap-2 pt-2 mt-auto px-4 pb-4">
       <Button variant="default" size="sm" onClick={onViewContact} className="flex-1">
         View Contact
       </Button>
