@@ -68,7 +68,8 @@ export class DelegateService {
     formData.append('attachedDelegates', JSON.stringify(data.attachedDelegates))
     formData.append('file', data.file)
 
-    return apiClient.uploadFile<ApiResponse<DelegateDocument>>('/delegates/documents', formData)
+    // Override default JSON content type for file upload
+    return apiClient.post<ApiResponse<DelegateDocument>>('/delegates/documents', formData)
   }
 
   async getDocuments(delegateId: string): Promise<ApiResponse<DelegateDocument[]>> {
@@ -77,10 +78,9 @@ export class DelegateService {
 
   // Export functionality
   async exportDelegates(params: GetDelegatesParams = {}): Promise<Blob> {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/delegates/export?${new URLSearchParams(params as any)}`, {
+    const response = await fetch(`${apiClient['baseUrl']}/delegates/export?${new URLSearchParams(params as any)}`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-        'X-Login-Device': import.meta.env.VITE_LOGIN_DEVICE,
       },
     })
     
@@ -89,25 +89,6 @@ export class DelegateService {
     }
     
     return response.blob()
-  }
-
-  // Bulk operations for Joomla integration
-  async bulkUpdateDelegates(delegateIds: string[], updates: Partial<UpdateDelegateRequest>): Promise<ApiResponse<void>> {
-    return apiClient.post<ApiResponse<void>>('/delegates/bulk-update', {
-      delegate_ids: delegateIds,
-      updates,
-    })
-  }
-
-  async bulkDeleteDelegates(delegateIds: string[]): Promise<ApiResponse<void>> {
-    return apiClient.post<ApiResponse<void>>('/delegates/bulk-delete', {
-      delegate_ids: delegateIds,
-    })
-  }
-
-  // Sync with Joomla users
-  async syncWithJoomla(): Promise<ApiResponse<{ synced: number; errors: any[] }>> {
-    return apiClient.post<ApiResponse<{ synced: number; errors: any[] }>>('/delegates/sync-joomla')
   }
 }
 

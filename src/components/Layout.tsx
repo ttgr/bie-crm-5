@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { AppSidebar } from "./AppSidebar"
 import { LogOut, User } from "lucide-react"
 import { useNavigate } from "react-router-dom"
-import { useAuth } from "@/contexts/AuthContext"
 
 interface LayoutProps {
   children: React.ReactNode
@@ -12,20 +11,13 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   const navigate = useNavigate()
-  const { user, logout, isAuthenticated } = useAuth()
 
   const handleLogout = () => {
-    logout()
     navigate("/login")
   }
 
-  // Redirect to login if not authenticated
-  if (!isAuthenticated) {
-    navigate("/login")
-    return null
-  }
-
-  const userName = user?.name || "Unknown User"
+  // Demo user - in a real app this would come from authentication context
+  const userName = "John Doe"
 
   return (
     <SidebarProvider>
